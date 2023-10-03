@@ -1,0 +1,38 @@
+[
+    {
+        "regex": "\\* O   R   C   A \\*",
+        "level": 0,
+        "title": "Beginning of ORCA File"
+    },
+    {
+        "regex": "={80}\\s+INPUT FILE\\s+={80}",
+        "level": 1,
+        "title": "Input file"
+    },
+    {
+        "regex": "\\* Geometry Optimization Run \\*",
+        "level": 1,
+        "title": "Geometry Optmization Run"
+    },
+    {
+        "regex": "ORCA GTO INTEGRAL CALCULATION",
+        "level": 1,
+        "title": "ORCA GTO Integral Calculation"
+    },
+    {
+        "regex": "-{79}\\s+ORCA SCF\\s+-{79}",
+        "level": 2,
+        "title": "ORCA SCF"
+    },
+    {
+        "regex": "-{12}\\s+SCF SETTINGS\\s+-{12}",
+        "level": 3,
+        "title": "SCF Settings"
+    },
+    {
+        "regex": "-{14}\\s+SCF ITERATIONS\\s+-{14}",
+        "level": 3,
+        "title": "SCF Iterations"
+    }
+
+]
