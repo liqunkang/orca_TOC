@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Synchronously read orcaPatterns.json
-const orcaPatterns = JSON.parse(fs.readFileSync(path.join(__dirname, 'orcaPatterns.json'), 'utf8'));
+const orcaPatterns = JSON.parse(fs.readFileSync(path.join(__dirname, 'patterns.json'), 'utf8'));
 
 // Adjust regex patterns to RegExp objects
 orcaPatterns.forEach(pattern => {
