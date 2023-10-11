@@ -1,12 +1,16 @@
 ---
 author: Liqun Kang
-date: 2023-10-10
-title: Reference for headings layout in ORCA input file
+date: 2023-10-11
+title: Reference for headings layout in ORCA output file
 ---
 
 [TOC]
 
-# Beginning of ORCA file
+# ORCA Output File Structure
+
+This document is a reference for headings layout in ORCA output file.
+
+## Beginning of ORCA file
 
 + Searching keywords:
 
@@ -14,9 +18,17 @@ title: Reference for headings layout in ORCA input file
 * O   R   C   A *
 ```
 
-+ Heading level: 0
++ Heading level: 1
 
-## Input File
++ Regular expression:
+
+```plaintext
+\\* O   R   C   A \\*
+```
+
++ Visiblity: show
+
+### Input File
 
 + Searching keywords:
 
@@ -26,9 +38,17 @@ title: Reference for headings layout in ORCA input file
 ================================================================================
 ```
 
-+ Heading level: 1
++ Heading level: 2
 
-## Single Point Calculation
++ Regular expression:
+
+```plaintext
+={80}\\s+INPUT FILE\\s+={80}
+```
+
++ Visiblity: show
+
+### Single Point Calculation
 
 + Searching keywords:
 
@@ -36,9 +56,17 @@ title: Reference for headings layout in ORCA input file
 * Single Point Calculation *
 ```
 
-+ Heading level: 1
++ Heading level: 2
 
-### Cartesian Coordinates
++ Regular expression:
+
+```plaintext
+\\* Single Point Calculation \\*
+```
+
++ Visiblity: show
+
+#### Cartesian Coordinates
 
 + Searching keywords:
 
@@ -48,9 +76,17 @@ CARTESIAN COORDINATES (ANGSTROEM)
 ---------------------------------
 ```
 
-+ Heading level: 2
++ Heading level: 3
 
-### Cartesian Coordinates (A.U.)
++ Regular expression:
+
+```plaintext
+-{33}\nCARTESIAN COORDINATES \\(ANGSTROEM\\)\n-{33}
+```
+
++ Visiblity: show
+
+#### Cartesian Coordinates (A.U.)
 
 + Searching keywords:
 
@@ -60,9 +96,17 @@ CARTESIAN COORDINATES (A.U.)
 ----------------------------
 ```
 
-+ Heading level: 2
++ Heading level: 3
 
-### Internal Coordinates (Angstroem)
++ Regular expression:
+
+```plaintext
+-{28}\nCARTESIAN COORDINATES \\(A\\.U\\.\\)\n-{28}
+```
+
++ Visiblity: show
+
+#### Internal Coordinates (Angstroem)
 
 + Searching keywords:
 
@@ -72,9 +116,17 @@ INTERNAL COORDINATES (ANGSTROEM)
 --------------------------------
 ```
 
-+ Heading level: 2
++ Heading level: 3
 
-### Internal Coordinates (A.U.)
++ Regular expression:
+
+```plaintext
+-{31}\nINTERNAL COORDINATES \\(ANGSTROEM\\)\n-{31}
+```
+
++ Visiblity: show
+
+#### Internal Coordinates (A.U.)
 
 + Searching keywords:
 
@@ -84,9 +136,17 @@ INTERNAL COORDINATES (A.U.)
 ---------------------------
 ```
 
-+ Heading level: 2
++ Heading level: 3
 
-### Basis Set Information
++ Regular expression:
+
+```plaintext
+-{26}\nINTERNAL COORDINATES \\(A\\.U\\.\\)\n-{26}
+```
+
++ Visiblity: show
+
+#### Basis Set Information
 
 + Searching keywords:
 
@@ -96,9 +156,18 @@ BASIS SET INFORMATION
 ---------------------
 ```
 
-+ Heading level: 2
++ Heading level: 3
 
-### Basis Set Input Format
++ Regular expression:
+
+```plaintext
+-{21}\nBASIS SET INFORMATION\n-{21}
+```
+
+
++ Visiblity: show
+
+#### Basis Set Input Format
 
 + Searching keywords:
 
@@ -108,9 +177,17 @@ BASIS SET IN INPUT FORMAT
 -------------------------
 ```
 
-+ Heading level: 2
++ Heading level: 3
 
-### Auxiliary Basis Set Information
++ Regular expression:
+
+```plaintext
+-{25}\nBASIS SET IN INPUT FORMAT\n-{25}
+```
+
++ Visiblity: show
+
+#### Auxiliary Basis Set Information
 
 + Searching keywords:
 
@@ -120,9 +197,17 @@ AUXILIARY/J BASIS SET INFORMATION
 ---------------------------------
 ```
 
-+ Heading level: 2
++ Heading level: 3
 
-### Auxiliary Basis Set Input Format
++ Regular expression:
+
+```plaintext
+-{33}\nAUXILIARY/J BASIS SET INFORMATION\n-{33}
+```
+
++ Visiblity: show
+
+#### Auxiliary Basis Set Input Format
 
 + Searching keywords:
 
@@ -132,9 +217,17 @@ AUXILIARY/J BASIS SET IN INPUT FORMAT
 -------------------------------------
 ```
 
-+ Heading level: 2
++ Heading level: 3
 
-## ORCA GTO Integral Calculation
++ Regular expression:
+
+```plaintext
+-{37}\nAUXILIARY/J BASIS SET IN INPUT FORMAT\n-{37}
+```
+
++ Visiblity: show
+
+### ORCA GTO Integral Calculation
 
 + Searching keywords:
 
@@ -142,9 +235,17 @@ AUXILIARY/J BASIS SET IN INPUT FORMAT
 ORCA GTO INTEGRAL CALCULATION
 ```
 
-+ Heading level: 1
++ Heading level: 2
 
-### ORCA SCF
++ Regular expression:
+
+```plaintext
+ORCA GTO INTEGRAL CALCULATION
+```
+
++ Visiblity: show
+
+#### ORCA SCF
 
 + Searching keywords:
 
@@ -154,9 +255,17 @@ ORCA GTO INTEGRAL CALCULATION
 -------------------------------------------------------------------------------
 ```
 
-+ Heading level: 2
++ Heading level: 3
 
-#### SCF Settings
++ Regular expression:
+
+```plaintext
+-{79}\\s+ORCA SCF\\s+-{79}
+```
+
++ Visiblity: show
+
+##### SCF Settings
 
 + Searching keywords:
 
@@ -166,9 +275,17 @@ SCF SETTINGS
 ------------
 ```
 
-+ Heading level: 3
++ Heading level: 4
 
-#### SHARK Integral Package
++ Regular expression:
+
+```plaintext
+-{12}\nSCF SETTINGS\n-{12}
+```
+
++ Visiblity: show
+
+##### SHARK Integral Package
 
 + Searching keywords:
 
@@ -178,9 +295,17 @@ SHARK INTEGRAL PACKAGE
 ----------------------
 ```
 
-+ Heading level: 3
++ Heading level: 4
 
-#### Initial Guess: Model Potential
++ Regular expression:
+
+```plaintext
+-{22}\nSHARK INTEGRAL PACKAGE\n-{22}
+```
+
++ Visiblity: show
+
+##### Initial Guess: Model Potential
 
 + Searching keywords:
 
@@ -190,9 +315,17 @@ INITIAL GUESS: MODEL POTENTIAL
 ------------------------------
 ```
 
-+ Heading level: 3
++ Heading level: 4
 
-#### Initial Guess Orbitals
++ Regular expression:
+
+```plaintext
+-{30}\nINITIAL GUESS: MODEL POTENTIAL\n-{30}
+```
+
++ Visiblity: show
+
+##### Initial Guess Orbitals
 
 + Searching keywords:
 
@@ -202,9 +335,17 @@ INITIAL GUESS ORBITALS
 ----------------------
 ```
 
-+ Heading level: 3
++ Heading level: 4
 
-#### DFT Grid Generation
++ Regular expression:
+
+```plaintext
+-{22}\nINITIAL GUESS ORBITALS\n-{22}
+```
+
++ Visiblity: show
+
+##### DFT Grid Generation
 
 + Searching keywords:
 
@@ -214,9 +355,17 @@ DFT GRID GENERATION
 -------------------
 ```
 
-+ Heading level: 3
++ Heading level: 4
 
-#### COSX Grid Generation
++ Regular expression:
+
+```plaintext
+-{19}\nDFT GRID GENERATION\n-{19}
+```
+
++ Visiblity: show
+
+##### COSX Grid Generation
 
 + Searching keywords:
 
@@ -226,9 +375,17 @@ COSX GRID GENERATION
 --------------------
 ```
 
-+ Heading level: 3
++ Heading level: 4
 
-#### SCF Iterations
++ Regular expression:
+
+```plaintext
+-{20}\nCOSX GRID GENERATION\n-{20}
+```
+
++ Visiblity: show
+
+##### SCF Iterations
 
 + Searching keywords:
 
@@ -238,9 +395,17 @@ SCF ITERATIONS
 --------------
 ```
 
-+ Heading level: 3
++ Heading level: 4
 
-#### Total SCF Energy
++ Regular expression:
+
+```plaintext
+-{14}\nSCF ITERATIONS\n-{14}
+```
+
++ Visiblity: show
+
+##### Total SCF Energy
 
 + Searching keywords:
 
@@ -250,9 +415,17 @@ TOTAL SCF ENERGY
 ----------------
 ```
 
-+ Heading level: 3
++ Heading level: 4
 
-#### UHF Spin Contamination
++ Regular expression:
+
+```plaintext
+-{16}\nTOTAL SCF ENERGY\n-{16}
+```
+
++ Visiblity: show
+
+##### UHF Spin Contamination
 
 + Searching keywords:
 
@@ -262,9 +435,17 @@ SCF CONVERGENCE
 ---------------
 ```
 
-+ Heading level: 3
++ Heading level: 4
 
-#### Orbital Energies
++ Regular expression:
+
+```plaintext
+-{15}\nSCF CONVERGENCE\n-{15}
+```
+
++ Visiblity: show
+
+##### Orbital Energies
 
 + Searching keywords:
 
@@ -274,9 +455,17 @@ ORBITAL ENERGIES
 ----------------
 ```
 
-+ Heading level: 3
++ Heading level: 4
 
-#### Molecular Orbitals
++ Regular expression:
+
+```plaintext
+-{16}\nORBITAL ENERGIES\n-{16}
+```
+
++ Visiblity: show
+
+##### Molecular Orbitals
 
 + Searching keywords:
 
@@ -286,9 +475,17 @@ MOLECULAR ORBITALS
 ------------------
 ```
 
-+ Heading level: 3
++ Heading level: 4
 
-#### Density
++ Regular expression:
+
+```plaintext
+-{18}\nMOLECULAR ORBITALS\n-{18}
+```
+
++ Visiblity: show
+
+##### Density
 
 + Searching keywords:
 
@@ -298,9 +495,17 @@ DENSITY
 -------
 ```
 
-+ Heading level: 3
++ Heading level: 4
 
-#### Spin Density
++ Regular expression:
+
+```plaintext
+-{7}\nDENSITY\n-{7}
+```
+
++ Visiblity: show
+
+##### Spin Density
 
 + Searching keywords:
 
@@ -310,9 +515,17 @@ SPIN DENSITY
 ------------
 ```
 
-+ Heading level: 3
++ Heading level: 4
 
-## Mulliken Population Analysis
++ Regular expression:
+
+```plaintext
+-{12}\nSPIN DENSITY\n-{12}
+```
+
++ Visiblity: show
+
+### Mulliken Population Analysis
 
 + Searching keywords:
 
@@ -320,9 +533,17 @@ SPIN DENSITY
 * MULLIKEN POPULATION ANALYSIS *
 ```
 
-+ Heading level: 1
++ Heading level: 2
 
-### Mulliken Atomic Charges and Spin Populations
++ Regular expression:
+
+```plaintext
+\\* MULLIKEN POPULATION ANALYSIS \\*
+```
+
++ Visiblity: show
+
+#### Mulliken Atomic Charges and Spin Populations
 
 + Searching keywords:
 
@@ -332,9 +553,17 @@ MULLIKEN ATOMIC CHARGES AND SPIN POPULATIONS
 --------------------------------------------
 ```
 
-+ Heading level: 2
++ Heading level: 3
 
-### Mulliken Orbital Charges and Spin Populations
++ Regular expression:
+
+```plaintext
+-{44}\nMULLIKEN ATOMIC CHARGES AND SPIN POPULATIONS\n-{44}
+```
+
++ Visiblity: show
+
+#### Mulliken Orbital Charges and Spin Populations
 
 + Searching keywords:
 
@@ -344,9 +573,17 @@ MULLIKEN ORBITAL CHARGES AND SPIN POPULAITONS
 ---------------------------------------------
 ```
 
-+ Heading level: 2
++ Heading level: 3
 
-### Mulliken Reduced Orbital Charges and Spin Populations
++ Regular expression:
+
+```plaintext
+-{45}\nMULLIKEN ORBITAL CHARGES AND SPIN POPULAITONS\n-{45}
+```
+
++ Visiblity: show
+
+#### Mulliken Reduced Orbital Charges and Spin Populations
 
 + Searching keywords:
 
@@ -356,9 +593,17 @@ MULLIKEN ORBITAL CHARGES AND SPIN POPULAITONS
 ---------------------------------------------
 ```
 
-+ Heading level: 2
++ Heading level: 3
 
-### Mulliken Overlap Charges
++ Regular expression:
+
+```plaintext
+-{45}\nMULLIKEN ORBITAL CHARGES AND SPIN POPULAITONS\n-{45}
+```
+
++ Visiblity: show
+
+#### Mulliken Overlap Charges
 
 + Searching keywords:
 
@@ -368,9 +613,17 @@ MULLIKEN OVERLAP CHARGES
 ------------------------
 ```
 
-+ Heading level: 2
++ Heading level: 3
 
-### Mulliken Orbital Populations per MO
++ Regular expression:
+
+```plaintext
+-{24}\nMULLIKEN OVERLAP CHARGES\n-{24}
+```
+
++ Visiblity: show
+
+#### Mulliken Orbital Populations per MO
 
 + Searching keywords:
 
@@ -380,9 +633,17 @@ MULLIKEN ORBITAL POPULATIONS PER MO
 -----------------------------------
 ```
 
-+ Heading level: 2
++ Heading level: 3
 
-## Lowdin Population Analysis
++ Regular expression:
+
+```plaintext
+-{35}\nMULLIKEN ORBITAL POPULATIONS PER MO\n-{35}
+```
+
++ Visiblity: show
+
+### Lowdin Population Analysis
 
 + Searching keywords:
 
@@ -390,9 +651,17 @@ MULLIKEN ORBITAL POPULATIONS PER MO
 * LOEWDIN POPULATION ANALYSIS *
 ```
 
-+ Heading level: 1
++ Heading level: 2
 
-### Lowdin Atomic Charges and Spin Populations
++ Regular expression:
+
+```plaintext
+\\* LOEWDIN POPULATION ANALYSIS \\*
+```
+
++ Visiblity: show
+
+#### Lowdin Atomic Charges and Spin Populations
 
 + Searching keywords:
 
@@ -402,9 +671,17 @@ LOEWDIN ATOMIC CHARGES AND SPIN POPULATIONS
 -------------------------------------------
 ```
 
-+ Heading level: 2
++ Heading level: 3
 
-### Lowdin Orbital Charges and Spin Populations
++ Regular expression:
+
+```plaintext
+-{43}\nLOEWDIN ATOMIC CHARGES AND SPIN POPULATIONS\n-{43}
+```
+
++ Visiblity: show
+
+#### Lowdin Orbital Charges and Spin Populations
 
 + Searching keywords:
 
@@ -414,9 +691,17 @@ LOEWDIN ORBITAL CHARGES AND SPIN POPULATIONS
 --------------------------------------------
 ```
 
-+ Heading level: 2
++ Heading level: 3
 
-### Lowdin Reduced Orbital Charges and Spin Populations
++ Regular expression:
+
+```plaintext
+-{44}\nLOEWDIN ORBITAL CHARGES AND SPIN POPULATIONS\n-{44}
+```
+
++ Visiblity: show
+
+#### Lowdin Reduced Orbital Charges and Spin Populations
 
 + Searching keywords:
 
@@ -426,9 +711,17 @@ LOEWDIN REDUCED ORBITAL CHARGES AND SPIN POPULATIONS
 ----------------------------------------------------
 ```
 
-+ Heading level: 2
++ Heading level: 3
 
-### Lowdin Bond Orders
++ Regular expression:
+
+```plaintext
+-{52}\nLOEWDIN REDUCED ORBITAL CHARGES AND SPIN POPULATIONS\n-{52}
+```
+
++ Visiblity: show
+
+#### Lowdin Bond Orders
 
 + Searching keywords:
 
@@ -438,9 +731,17 @@ LOEWDIN BOND ORDERS (THRESH 0.050000)
 ---------------------------------
 ```
 
-+ Heading level: 2
++ Heading level: 3
 
-### Lowdin Orbital Populations per MO
++ Regular expression:
+
+```plaintext
+-{37}\nLOEWDIN BOND ORDERS \\(THRESH 0\\.050000\\)\n-{37}
+```
+
++ Visiblity: show
+
+#### Lowdin Orbital Populations per MO
 
 + Searching keywords:
 
@@ -450,9 +751,17 @@ LOEWDIN ORBITAL POPULATIONS PER MO
 ----------------------------------
 ```
 
-+ Heading level: 2
++ Heading level: 3
 
-### Lowdin Reduced Orbital Populations per MO
++ Regular expression:
+
+```plaintext
+-{34}\nLOEWDIN ORBITAL POPULATIONS PER MO\n-{34}
+```
+
++ Visiblity: show
+
+#### Lowdin Reduced Orbital Populations per MO
 
 + Searching keywords:
 
@@ -462,9 +771,17 @@ LOEWDIN REDUCED ORBITAL POPULATIONS PER MO
 -------------------------------------------
 ```
 
-+ Heading level: 2
++ Heading level: 3
 
-## Mayer Population Analysis
++ Regular expression:
+
+```plaintext
+-{42}\nLOEWDIN REDUCED ORBITAL POPULATIONS PER MO\n-{42}
+```
+
++ Visiblity: show
+
+### Mayer Population Analysis
 
 + Searching keywords:
 
@@ -472,9 +789,17 @@ LOEWDIN REDUCED ORBITAL POPULATIONS PER MO
 * MAYER POPULATION ANALYSIS *
 ```
 
-+ Heading level: 1
++ Heading level: 2
 
-### Timings
++ Regular expression:
+
+```plaintext
+\\* MAYER POPULATION ANALYSIS \\*
+```
+
++ Visiblity: show
+
+#### Timings
 
 + Searching keywords:
 
@@ -484,9 +809,17 @@ TIMINGS
 -------
 ```
 
-+ Heading level: 2
++ Heading level: 3
 
-## Final Single Point Energy
++ Regular expression:
+
+```plaintext
+-{7}\nTIMINGS\n-{7}
+```
+
++ Visiblity: show
+
+### Final Single Point Energy
 
 + Searching keywords:
 
@@ -494,9 +827,17 @@ TIMINGS
 FINAL SINGLE POINT ENERGY
 ```
 
-+ Heading level: 1
++ Heading level: 2
 
-## ORCA property calculations
++ Regular expression:
+
+```plaintext
+FINAL SINGLE POINT ENERGY
+```
+
++ Visiblity: show
+
+### ORCA property calculations
 
 + Searching keywords:
 
@@ -504,9 +845,17 @@ FINAL SINGLE POINT ENERGY
 *     ORCA property calculations      *
 ```
 
-+ Heading level: 1
++ Heading level: 2
 
-### ORCA Electric Properties Calculation
++ Regular expression:
+
+```plaintext
+\\*     ORCA property calculations      \\*
+```
+
++ Visiblity: show
+
+#### ORCA Electric Properties Calculation
 
 + Searching keywords:
 
@@ -516,9 +865,17 @@ FINAL SINGLE POINT ENERGY
 ------------------------------------------------------------------------------
 ```
 
-+ Heading level: 2
++ Heading level: 3
 
-#### Dipole Moment
++ Regular expression:
+
+```plaintext
+-{78}\\s+ORCA ELECTRIC PROPERTIES CALCULATION\\s+-{78}
+```
+
++ Visiblity: show
+
+##### Dipole Moment
 
 + Searching keywords:
 
@@ -528,7 +885,17 @@ DIPOLE MOMENT
 -------------
 ```
 
-#### Rotational Spectrum
++ Heading level: 4
+
++ Regular expression:
+
+```plaintext
+-{13}\nDIPOLE MOMENT\n-{13}
+```
+
++ Visiblity: show
+
+##### Rotational Spectrum
 
 + Searching keywords:
 
@@ -538,7 +905,17 @@ Rotational spectrum
 --------------------
 ```
 
-### ORCA Spin-Orbit Coupling Calculation
++ Heading level: 4
+
++ Regular expression:
+
+```plaintext
+-{20}\nRotational spectrum \n-{20}
+```
+
++ Visiblity: show
+
+#### ORCA Spin-Orbit Coupling Calculation
 
 + Searching keywords:
 
@@ -548,9 +925,17 @@ Rotational spectrum
 ------------------------------------------------------------------------------
 ```
 
-+ Heading level: 2
++ Heading level: 3
 
-#### SHARK Spin-Orbit Mean Field Calculation
++ Regular expression:
+
+```plaintext
+-{78}\\s+ORCA SPIN-ORBIT COUPLING CALCULATION\\s+-{78}
+```
+
++ Visiblity: show
+
+##### SHARK Spin-Orbit Mean Field Calculation
 
 + Searching keywords:
 
@@ -560,9 +945,17 @@ SHARK SPIN-ORBIT MEAN FIELD CALCULATION
 ----------------------------------------
 ```
 
-+ Heading level: 3
++ Heading level: 4
 
-### ORCA EPR/NMR Calculation
++ Regular expression:
+
+```plaintext
+-{40}\nSHARK SPIN-ORBIT MEAN FIELD CALCULATION \n-{40}
+```
+
++ Visiblity: show
+
+#### ORCA EPR/NMR Calculation
 
 + Searching keywords:
 
@@ -572,9 +965,17 @@ SHARK SPIN-ORBIT MEAN FIELD CALCULATION
 ------------------------------------------------------------------------------
 ```
 
-+ Heading level: 2
++ Heading level: 3
 
-### ORCA CP-SCF Calculation
++ Regular expression:
+
+```plaintext
+-{78}\\s+ORCA EPR/NMR CALCULATION\\s+-{78}
+```
+
++ Visiblity: show
+
+#### ORCA CP-SCF Calculation
 
 + Searching keywords:
 
@@ -584,9 +985,17 @@ SHARK SPIN-ORBIT MEAN FIELD CALCULATION
 ------------------------------------------------------------------------------
 ```
 
-+ Heading level: 2
++ Heading level: 3
 
-#### Electronic G-Matrix
++ Regular expression:
+
+```plaintext
+-{78}\\s+ORCA CP-SCF CALCULATION\\s+-{78}
+```
+
++ Visiblity: show
+
+##### Electronic G-Matrix
 
 + Searching keywords:
 
@@ -596,9 +1005,17 @@ ELECTRONIC G-MATRIX
 -------------------
 ```
 
-+ Heading level: 3
++ Heading level: 4
 
-# End of ORCA file
++ Regular expression:
+
+```plaintext
+-{19}\nELECTRONIC G-MATRIX\n-{19}
+```
+
++ Visiblity: show
+
+## End of ORCA file
 
 + Searching keywords:
 
@@ -606,5 +1023,12 @@ ELECTRONIC G-MATRIX
 TOTAL RUN TIME:
 ```
 
-+ Heading level: 0
++ Heading level: 1
 
++ Regular expression:
+
+```plaintext
+TOTAL RUN TIME:
+```
+
++ Visiblity: show

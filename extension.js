@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Synchronously read orcaPatterns.json
-const orcaPatterns = JSON.parse(fs.readFileSync(path.join(__dirname, 'orcaPatterns.json'), 'utf8'));
+const orcaPatterns = JSON.parse(fs.readFileSync(path.join(__dirname, 'patterns.json'), 'utf8'));
 
 // Adjust regex patterns to RegExp objects
 orcaPatterns.forEach(pattern => {
@@ -141,14 +141,18 @@ function activate(context) {
 			showOrcaOutline();
 		}
 	}));
-
+    // Initial check if the currently opened document meets the conditions
+    const activeEditor = vscode.window.activeTextEditor;
+    if (activeEditor && activeEditor.document.languageId === 'orcaOut' && activeEditor.document.fileName.endsWith('.out')) {
+        showOrcaOutline();
+    }
 }
 
 function deactivate() {}
 
 function parseOrcaFile(document, filePath) {
     let matches = [];
-    let stack = [{ children: matches }];  // A root node for ease of algorithm
+    let stack = [{ children: matches }];  // A default root node for ease of algorithm
 
     // First, get all the matches in order.
     let allMatches = [];
@@ -178,16 +182,19 @@ function parseOrcaFile(document, filePath) {
 
     // Populate the tree based on sorted matches
     allMatches.forEach(matchItem => {
-        while (stack.length - 1 > matchItem.level) {
-            stack.pop();  // We ascend the tree
+        // Pop items from the stack until we reach the parent of the current matchItem
+        while (stack.length > matchItem.level) {
+            stack.pop();
         }
 
+        // Add the current matchItem as a child to the top item on the stack
         stack[stack.length - 1].children.push(matchItem);
 
-        if (matchItem.level + 1 > stack.length) {
-            stack.push(matchItem);  // We descend in the tree
-        }
+        // Push the current matchItem onto the stack to become the new potential parent
+        stack.push(matchItem);
+
     });
+
 
     return matches;
 }
