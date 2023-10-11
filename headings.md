@@ -81,7 +81,7 @@ CARTESIAN COORDINATES (ANGSTROEM)
 + Regular expression:
 
 ```plaintext
--{32}CARTESIAN COORDINATES \\(ANGSTROEM\\){32}
+-{33}\nCARTESIAN COORDINATES \\(ANGSTROEM\\)\n-{33}
 ```
 
 + Visiblity: show
@@ -101,7 +101,7 @@ CARTESIAN COORDINATES (A.U.)
 + Regular expression:
 
 ```plaintext
--{28}CARTESIAN COORDINATES \\(A\\.U\\.\\){28}
+-{28}\nCARTESIAN COORDINATES \\(A\\.U\\.\\)\n-{28}
 ```
 
 + Visiblity: show
@@ -121,7 +121,7 @@ INTERNAL COORDINATES (ANGSTROEM)
 + Regular expression:
 
 ```plaintext
--{28}INTERNAL COORDINATES \\(ANGSTROEM\\){28}
+-{31}\nINTERNAL COORDINATES \\(ANGSTROEM\\)\n-{31}
 ```
 
 + Visiblity: show
@@ -141,7 +141,7 @@ INTERNAL COORDINATES (A.U.)
 + Regular expression:
 
 ```plaintext
--{24}INTERNAL COORDINATES \\(A\\.U\\.\\){24}
+-{26}\nINTERNAL COORDINATES \\(A\\.U\\.\\)\n-{26}
 ```
 
 + Visiblity: show
@@ -161,8 +161,9 @@ BASIS SET INFORMATION
 + Regular expression:
 
 ```plaintext
--{21}BASIS SET INFORMATION{21}
+-{21}\nBASIS SET INFORMATION\n-{21}
 ```
+
 
 + Visiblity: show
 
@@ -181,7 +182,7 @@ BASIS SET IN INPUT FORMAT
 + Regular expression:
 
 ```plaintext
--{25}BASIS SET IN INPUT FORMAT{25}
+-{25}\nBASIS SET IN INPUT FORMAT\n-{25}
 ```
 
 + Visiblity: show
@@ -201,7 +202,7 @@ AUXILIARY/J BASIS SET INFORMATION
 + Regular expression:
 
 ```plaintext
--{33}AUXILIARY/J BASIS SET INFORMATION{33}
+-{33}\nAUXILIARY/J BASIS SET INFORMATION\n-{33}
 ```
 
 + Visiblity: show
@@ -221,7 +222,7 @@ AUXILIARY/J BASIS SET IN INPUT FORMAT
 + Regular expression:
 
 ```plaintext
--{37}AUXILIARY/J BASIS SET IN INPUT FORMAT{37}
+-{37}\nAUXILIARY/J BASIS SET IN INPUT FORMAT\n-{37}
 ```
 
 + Visiblity: show
@@ -279,7 +280,7 @@ SCF SETTINGS
 + Regular expression:
 
 ```plaintext
--{12}SCF SETTINGS{12}
+-{12}\nSCF SETTINGS\n-{12}
 ```
 
 + Visiblity: show
@@ -299,7 +300,7 @@ SHARK INTEGRAL PACKAGE
 + Regular expression:
 
 ```plaintext
--{22}SHARK INTEGRAL PACKAGE{22}
+-{22}\nSHARK INTEGRAL PACKAGE\n-{22}
 ```
 
 + Visiblity: show
@@ -319,7 +320,7 @@ INITIAL GUESS: MODEL POTENTIAL
 + Regular expression:
 
 ```plaintext
--{30}INITIAL GUESS: MODEL POTENTIAL{30}
+-{30}\nINITIAL GUESS: MODEL POTENTIAL\n-{30}
 ```
 
 + Visiblity: show
@@ -339,7 +340,7 @@ INITIAL GUESS ORBITALS
 + Regular expression:
 
 ```plaintext
--{22}INITIAL GUESS ORBITALS{22}
+-{22}\nINITIAL GUESS ORBITALS\n-{22}
 ```
 
 + Visiblity: show
@@ -359,7 +360,7 @@ DFT GRID GENERATION
 + Regular expression:
 
 ```plaintext
--{19}DFT GRID GENERATION{19}
+-{19}\nDFT GRID GENERATION\n-{19}
 ```
 
 + Visiblity: show
@@ -379,7 +380,7 @@ COSX GRID GENERATION
 + Regular expression:
 
 ```plaintext
--{20}COSX GRID GENERATION{20}
+-{20}\nCOSX GRID GENERATION\n-{20}
 ```
 
 + Visiblity: show
@@ -399,7 +400,7 @@ SCF ITERATIONS
 + Regular expression:
 
 ```plaintext
--{14}SCF ITERATIONS{14}
+-{14}\nSCF ITERATIONS\n-{14}
 ```
 
 + Visiblity: show
@@ -419,7 +420,7 @@ TOTAL SCF ENERGY
 + Regular expression:
 
 ```plaintext
--{16}TOTAL SCF ENERGY{16}
+-{16}\nTOTAL SCF ENERGY\n-{16}
 ```
 
 + Visiblity: show
@@ -439,7 +440,7 @@ SCF CONVERGENCE
 + Regular expression:
 
 ```plaintext
--{15}SCF CONVERGENCE{15}
+-{15}\nSCF CONVERGENCE\n-{15}
 ```
 
 + Visiblity: show
@@ -459,7 +460,7 @@ ORBITAL ENERGIES
 + Regular expression:
 
 ```plaintext
--{16}ORBITAL ENERGIES{16}
+-{16}\nORBITAL ENERGIES\n-{16}
 ```
 
 + Visiblity: show
@@ -479,7 +480,7 @@ MOLECULAR ORBITALS
 + Regular expression:
 
 ```plaintext
--{18}MOLECULAR ORBITALS{18}
+-{18}\nMOLECULAR ORBITALS\n-{18}
 ```
 
 + Visiblity: show
@@ -499,7 +500,7 @@ DENSITY
 + Regular expression:
 
 ```plaintext
--{7}DENSITY{7}
+-{7}\nDENSITY\n-{7}
 ```
 
 + Visiblity: show
@@ -519,7 +520,7 @@ SPIN DENSITY
 + Regular expression:
 
 ```plaintext
--{12}SPIN DENSITY{12}
+-{12}\nSPIN DENSITY\n-{12}
 ```
 
 + Visiblity: show
@@ -557,7 +558,7 @@ MULLIKEN ATOMIC CHARGES AND SPIN POPULATIONS
 + Regular expression:
 
 ```plaintext
--{44}MULLIKEN ATOMIC CHARGES AND SPIN POPULATIONS{44}
+-{44}\nMULLIKEN ATOMIC CHARGES AND SPIN POPULATIONS\n-{44}
 ```
 
 + Visiblity: show
@@ -577,7 +578,7 @@ MULLIKEN ORBITAL CHARGES AND SPIN POPULAITONS
 + Regular expression:
 
 ```plaintext
--{45}MULLIKEN ORBITAL CHARGES AND SPIN POPULAITONS{45}
+-{45}\nMULLIKEN ORBITAL CHARGES AND SPIN POPULAITONS\n-{45}
 ```
 
 + Visiblity: show
@@ -597,7 +598,7 @@ MULLIKEN ORBITAL CHARGES AND SPIN POPULAITONS
 + Regular expression:
 
 ```plaintext
--{45}MULLIKEN ORBITAL CHARGES AND SPIN POPULAITONS{45}
+-{45}\nMULLIKEN ORBITAL CHARGES AND SPIN POPULAITONS\n-{45}
 ```
 
 + Visiblity: show
@@ -617,7 +618,7 @@ MULLIKEN OVERLAP CHARGES
 + Regular expression:
 
 ```plaintext
--{24}MULLIKEN OVERLAP CHARGES{24}
+-{24}\nMULLIKEN OVERLAP CHARGES\n-{24}
 ```
 
 + Visiblity: show
@@ -637,7 +638,7 @@ MULLIKEN ORBITAL POPULATIONS PER MO
 + Regular expression:
 
 ```plaintext
--{35}MULLIKEN ORBITAL POPULATIONS PER MO{35}
+-{35}\nMULLIKEN ORBITAL POPULATIONS PER MO\n-{35}
 ```
 
 + Visiblity: show
@@ -675,7 +676,7 @@ LOEWDIN ATOMIC CHARGES AND SPIN POPULATIONS
 + Regular expression:
 
 ```plaintext
--{43}LOEWDIN ATOMIC CHARGES AND SPIN POPULATIONS{43}
+-{43}\nLOEWDIN ATOMIC CHARGES AND SPIN POPULATIONS\n-{43}
 ```
 
 + Visiblity: show
@@ -695,7 +696,7 @@ LOEWDIN ORBITAL CHARGES AND SPIN POPULATIONS
 + Regular expression:
 
 ```plaintext
--{44}LOEWDIN ORBITAL CHARGES AND SPIN POPULATIONS{44}
+-{44}\nLOEWDIN ORBITAL CHARGES AND SPIN POPULATIONS\n-{44}
 ```
 
 + Visiblity: show
@@ -715,7 +716,7 @@ LOEWDIN REDUCED ORBITAL CHARGES AND SPIN POPULATIONS
 + Regular expression:
 
 ```plaintext
--{52}LOEWDIN REDUCED ORBITAL CHARGES AND SPIN POPULATIONS{52}
+-{52}\nLOEWDIN REDUCED ORBITAL CHARGES AND SPIN POPULATIONS\n-{52}
 ```
 
 + Visiblity: show
@@ -735,7 +736,7 @@ LOEWDIN BOND ORDERS (THRESH 0.050000)
 + Regular expression:
 
 ```plaintext
--{37}LOEWDIN BOND ORDERS \\(THRESH 0\\.050000\\){37}
+-{37}\nLOEWDIN BOND ORDERS \\(THRESH 0\\.050000\\)\n-{37}
 ```
 
 + Visiblity: show
@@ -755,7 +756,7 @@ LOEWDIN ORBITAL POPULATIONS PER MO
 + Regular expression:
 
 ```plaintext
--{34}LOEWDIN ORBITAL POPULATIONS PER MO{34}
+-{34}\nLOEWDIN ORBITAL POPULATIONS PER MO\n-{34}
 ```
 
 + Visiblity: show
@@ -775,7 +776,7 @@ LOEWDIN REDUCED ORBITAL POPULATIONS PER MO
 + Regular expression:
 
 ```plaintext
--{42}LOEWDIN REDUCED ORBITAL POPULATIONS PER MO{42}
+-{42}\nLOEWDIN REDUCED ORBITAL POPULATIONS PER MO\n-{42}
 ```
 
 + Visiblity: show
@@ -813,7 +814,7 @@ TIMINGS
 + Regular expression:
 
 ```plaintext
--{7}TIMINGS{7}
+-{7}\nTIMINGS\n-{7}
 ```
 
 + Visiblity: show
@@ -869,7 +870,7 @@ FINAL SINGLE POINT ENERGY
 + Regular expression:
 
 ```plaintext
--{80}\\s+ORCA ELECTRIC PROPERTIES CALCULATION\\s+-{80}
+-{78}\\s+ORCA ELECTRIC PROPERTIES CALCULATION\\s+-{78}
 ```
 
 + Visiblity: show
@@ -889,10 +890,11 @@ DIPOLE MOMENT
 + Regular expression:
 
 ```plaintext
--{13}DIPOLE MOMENT{13}
+-{13}\nDIPOLE MOMENT\n-{13}
 ```
 
 + Visiblity: show
+
 ##### Rotational Spectrum
 
 + Searching keywords:
@@ -908,7 +910,7 @@ Rotational spectrum
 + Regular expression:
 
 ```plaintext
--{20}Rotational spectrum {20}
+-{20}\nRotational spectrum \n-{20}
 ```
 
 + Visiblity: show
@@ -928,7 +930,7 @@ Rotational spectrum
 + Regular expression:
 
 ```plaintext
--{80}\\s+ORCA SPIN-ORBIT COUPLING CALCULATION\\s+-{80}
+-{78}\\s+ORCA SPIN-ORBIT COUPLING CALCULATION\\s+-{78}
 ```
 
 + Visiblity: show
@@ -948,7 +950,7 @@ SHARK SPIN-ORBIT MEAN FIELD CALCULATION
 + Regular expression:
 
 ```plaintext
--{40}SHARK SPIN-ORBIT MEAN FIELD CALCULATION {40}
+-{40}\nSHARK SPIN-ORBIT MEAN FIELD CALCULATION \n-{40}
 ```
 
 + Visiblity: show
@@ -968,7 +970,7 @@ SHARK SPIN-ORBIT MEAN FIELD CALCULATION
 + Regular expression:
 
 ```plaintext
--{80}\\s+ORCA EPR/NMR CALCULATION\\s+-{80}
+-{78}\\s+ORCA EPR/NMR CALCULATION\\s+-{78}
 ```
 
 + Visiblity: show
@@ -988,7 +990,7 @@ SHARK SPIN-ORBIT MEAN FIELD CALCULATION
 + Regular expression:
 
 ```plaintext
--{80}\\s+ORCA CP-SCF CALCULATION\\s+-{80}
+-{78}\\s+ORCA CP-SCF CALCULATION\\s+-{78}
 ```
 
 + Visiblity: show
@@ -1008,7 +1010,7 @@ ELECTRONIC G-MATRIX
 + Regular expression:
 
 ```plaintext
--{19}ELECTRONIC G-MATRIX{19}
+-{19}\nELECTRONIC G-MATRIX\n-{19}
 ```
 
 + Visiblity: show
