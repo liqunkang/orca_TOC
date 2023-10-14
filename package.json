@@ -2,7 +2,7 @@
   "name": "orcatoc",
   "displayName": "orca_toc",
   "description": "Provides an outline for ORCA files in the VS Code sidebar.",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "engines": {
     "vscode": "^1.82.0"
   },
@@ -58,5 +58,6 @@
     "url": "https://github.com/liqunkang/orca_TOC.git" 
   },
   "license": "GPL-3.0",
-  "publisher": "liqunKang"
+  "publisher": "liqunKang",
+  "icon": "images/orca_TOC.png"
 }

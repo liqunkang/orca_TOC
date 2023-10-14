@@ -12,7 +12,7 @@ N/A
 
 ## Extension Settings
 
-The current version (0.0.2) of this extension does not have any settings.
+The current version (0.1.0) of this extension does not have any settings.
 
 ## Known Issues
 
@@ -38,7 +38,11 @@ Added support for automatically showing TOC view when opening an ORCA output fil
 
 ---
 
-## Roadmap
+### 0.1.0
+
+Update of `patterns.json` file and `headings.md` file. Additional regular expressions added to the list used to parse the ORCA output file. Most frequently used keywords in the ORCA output file are now parsed. The list of regular expressions will be updated in future releases.
+
+## TODO
 
 - [x] Automatically show TOC view when opening an ORCA output file
 - [ ] Automatically update TOC view when saving changes to an ORCA output file (additional command to manually refresh TOC view)
@@ -47,6 +51,14 @@ Added support for automatically showing TOC view when opening an ORCA output fil
 - [ ] Add illustrations to this README
 - [ ] Add icon to this extension
 - [x] Updating the list of regular expressions used to parse the ORCA output file
+
+## Roadmap
+
+The current version represents a very early release of this extension. 
+
+The list of regular expressions in the `headings.md` file is parsed by converting each heading and the corresponding regular expression into a JSON object. The headings that will be displayed in the `ORCA FILE OUTLINE` is the heading text. This approach is not very flexible because some of the headings in the ORCA output file could be changed based on the type of calculation or in different versions of ORCA. In the next major release, the list of regular expressions will be more universal and the matched text will be displayed in the `ORCA FILE OUTLINE` view. The list of regular expressions will be updated in future releases. Most of the keywords in the ORCA output file are in full capital letters, which is not very user friendly. In the next major release, the matched text will be converted to title case before being displayed in the `ORCA FILE OUTLINE` view. There will be a list of keywords that will not be converted to title case. The list of keywords will be updated in future releases.
+
+Another feature that will be added in the next major release is to enable the scrolling of the `ORCA FILE OUTLINE` view to the current line in the ORCA output file. This will be useful when the ORCA output file is very long and the user is navigating through the file. The `ORCA FILE OUTLINE` view will automatically scroll to the current line in the ORCA output file.
 
 ## For Developers
 
