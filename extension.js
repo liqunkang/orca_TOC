@@ -50,6 +50,7 @@ class OrcaOutlineProvider {
 			});
 		} else {
 			// If there's no element, return the top-level matches
+            console.log(typeof this._matches, this._matches);
 			return this._matches.map(match => {
 				return {
 					label: `${match.title} (Line ${match.line + 1})`,
@@ -82,28 +83,48 @@ class OrcaOutlineProvider {
 
 let orcaOutlineProvider = new OrcaOutlineProvider([]);
 
-function showOrcaOutline() {
+async function showOrcaOutline() {  // Make the function asynchronous
     const activeEditor = vscode.window.activeTextEditor;
     if (!activeEditor) {
-        vscode.window.showErrorMessage("No active document found. Please open a file first.");
+        // Check if there's a file with .out extension in the workspace
+        if (vscode.workspace.textDocuments.some(doc => doc.uri.scheme === 'file' && doc.fileName.endsWith('.out'))) {
+            vscode.window.showErrorMessage("The file might be too large to open! VS Code is unable to operate with files larger than 50MB in active editor. Please consider breaking the file into smaller chunks.");
+        } else {
+            // If there's no file with .out extension in the workspace, show an error message, and Open File button to open the Open File dialog
+            vscode.window.showErrorMessage("No active document found. Please open a file first.", "Open File").then((value) => {
+                if (value === "Open File") {
+                    vscode.commands.executeCommand("workbench.action.files.openFile");
+                }
+            });
+        }
         return;
     }
 
     const document = activeEditor.document;
-    if (document.languageId !== 'orcaOut' || !document.fileName.endsWith('.out')) {
-        // Check if the active document is an ORCA file (.out)
-        vscode.window.showErrorMessage("The active document is not an ORCA file.");
-        return;
+    try {
+        if (document.languageId !== 'orcaOut' || !document.fileName.endsWith('.out')) {
+            // Check if the active document is an ORCA file (.out)
+            vscode.window.showErrorMessage("The active document is not an ORCA file.");
+            return;
+        }
+
+        // Maybe handle non-UTF-8 characters here, normalize or clean up the document text
+
+        const matches = await parseOrcaFile(document, document.uri.fsPath);  // Wait for the promise to resolve
+
+        // Apply keyword replacements to the matches
+        await replaceKeywords(matches);  // Wait for the promise to resolve
+
+        orcaOutlineProvider.update(matches, document.uri.fsPath);  // Update the global instance of the provider
+
+        // The keyword replacement seems to be commented out, but if you decide to use it again, make sure to await it as well
+        // await replaceKeywords(matches);  
+        // orcaOutlineProvider.update(matches, document.uri.fsPath);
+
+    } catch (error) {
+        vscode.window.showErrorMessage(`Error processing the file: ${error.message}`);
     }
-
-    const matches = parseOrcaFile(document, document.uri.fsPath);  // Pass the file path to the function
-    orcaOutlineProvider.update(matches, document.uri.fsPath);  // Update the global instance of the provider
-
-	//console.log(matches);  // This will print matches in the debug console
-	//orcaOutlineProvider.update(matches, document.uri.fsPath);
-
 }
-
 
 function activate(context) {
     context.subscriptions.push(vscode.commands.registerCommand('extension.showOrcaOutline', showOrcaOutline));
@@ -131,61 +152,90 @@ function toTitleCase(str) {
     });
 }
 
+
 function parseOrcaFile(document, filePath) {
     let matches = [];
-    let stack = [{ children: matches }];  // A default root node for ease of algorithm
+    let stack = [{ children: matches }];
 
-    // First, get all the matches in order.
-    let allMatches = [];
-    orcaPatterns.forEach(pattern => {
-        let match;
-        while (match = pattern.regex.exec(document.getText())) {
-            const line = document.positionAt(match.index).line;
-            let title = match[1] || pattern.title;
-            title = toTitleCase(title.trim());
-            for (let keyword in keywordReplacements) {
-                if (title.includes(keyword)) {
-                    title = title.replace(keyword, keywordReplacements[keyword]);
+    return vscode.window.withProgress({
+        location: vscode.ProgressLocation.Notification,
+        title: "Parsing ORCA File",
+        cancellable: true
+    }, (progress, token) => {
+        return new Promise((resolve, reject) => {
+            let buffer = document.getText();
+
+            let allMatches = [];
+            let totalPatterns = orcaPatterns.length;
+            orcaPatterns.forEach((pattern, index) => {
+                let match;
+                while (match = pattern.regex.exec(buffer)) {
+                    const line = document.positionAt(match.index).line;
+                    let title = match[1] || pattern.title;
+                    title = toTitleCase(title.trim());
+
+                    // Replace keywords in the title
+                    //for (let keyword in keywordReplacements) {
+                    //    if (title.includes(keyword)) {
+                    //        title = title.replace(keyword, keywordReplacements[keyword]);
+                    //    }
+                    // }
+
+                    allMatches.push({
+                        line: line,
+                        title: title,
+                        level: pattern.level,
+                        children: [],
+                        command: {
+                            command: 'vscode.open',
+                            arguments: [vscode.Uri.file(filePath), {
+                                selection: new vscode.Range(line, 0, line, 0)
+                            }],
+                            title: 'Open File'
+                        },
+                        tooltip: `${pattern.title} (Line ${line + 1})`
+                    });
                 }
-            }
-            allMatches.push({
-                line: line,
-                title: title,
-                level: pattern.level,
-                children: [],
-                command: {
-                    command: 'vscode.open',
-                    arguments: [vscode.Uri.file(filePath), {
-                        selection: new vscode.Range(line, 0, line, 0)
-                    }],
-                    title: 'Open File'
-                },
-                tooltip: `${pattern.title} (Line ${line + 1})`
+
+                progress.report({ message: `Processing Pattern ${index + 1} of ${totalPatterns}`, increment: (100 / totalPatterns) });
+                
+                if (token.isCancellationRequested) {
+                    reject("Operation was cancelled by the user.");
+                }
             });
-        }
+
+            allMatches.sort((a, b) => a.line - b.line);
+
+            allMatches.forEach(matchItem => {
+                while (stack.length > matchItem.level) {
+                    stack.pop();
+                }
+
+                stack[stack.length - 1].children.push(matchItem);
+                stack.push(matchItem);
+            });
+
+            resolve(matches);
+        });
     });
-
-    // Sort allMatches by line number
-    allMatches.sort((a, b) => a.line - b.line);
-
-    // Populate the tree based on sorted matches
-    allMatches.forEach(matchItem => {
-        // Pop items from the stack until we reach the parent of the current matchItem
-        while (stack.length > matchItem.level) {
-            stack.pop();
-        }
-
-        // Add the current matchItem as a child to the top item on the stack
-        stack[stack.length - 1].children.push(matchItem);
-
-        // Push the current matchItem onto the stack to become the new potential parent
-        stack.push(matchItem);
-
-    });
-
-
-    return matches;
 }
+
+
+
+
+async function replaceKeywords(matches) {
+    for (let match of matches) {
+        for (let keyword in keywordReplacements) {
+            if (match.title.includes(keyword)) {
+                match.title = match.title.replace(keyword, keywordReplacements[keyword]);
+            }
+        }
+        if (match.children) {
+            await replaceKeywords(match.children);  // Recursive replacement for child nodes
+        }
+    }
+}
+
 
 module.exports = {
     activate,

@@ -12,43 +12,26 @@ N/A
 
 ## Extension Settings
 
-The current version (0.2.0) of this extension does not have any settings.
+The current version (0.2.1) of this extension does not have any settings.
 
-## Known Issues
+## Issues and Important Notes
 
-1. The TOC view will not automatically update when you save changes to the ORCA output file. You will need to manually run the command `Refresh Orca Outline` from the command palette. This will be fixed in a future release.
+- Due to the memory limit of VS Code for large files, the extension will not work properly for very large ORCA output files (>50MB) because VS code will disable the `activeEditor`. To parse very large ORCA output files and generate the TOC view, the extension will need to be run in a separate process. This will be implemented in a future release. Currently, the extension will work for ORCA output files that are less than 50MB in size. If you have very large ORCA output files, please consider splitting them into smaller chunks or remove the parts that are not needed (for example full print of the MOs).
+
+- If you don's see the `ORCA FILE OUTLINE` in the sidebar of `EXPLORER`, please make sure that the `OPEN EDITORS` drop down menu is expanded. This is a known issue and will be fixed in a future release.
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+For detailed release notes, please see [CHANGELOG.md](CHANGELOG.md).
 
-### 0.0.1
+### 0.2.1
 
-Initial release of orcatoc. This is a very early release and is still under development.
-
----
-
-### 0.0.2
-
-Added support for automatically showing TOC view when opening an ORCA output file.
-
-`headings.md` file added to the extension. This file contains a list of regular expressions that are used to parse the ORCA output file. The list of regular expressions will be updated in future releases.
-
-`generate_patterns.py` script added to the extension. This script is used to parse the `headings.md` file and generate the `patterns.json` file. The `patterns.json` file is used by the extension to parse the ORCA output file.
-
----
-
-### 0.1.0
-
-Update of `patterns.json` file and `headings.md` file. Additional regular expressions added to the list used to parse the ORCA output file. Most frequently used keywords in the ORCA output file are now parsed. The list of regular expressions will be updated in future releases.
-
-### 0.2.0
-
-This version removed the previous `generate_patterns.py` script and the `headings.md` file. The list of regular expressions in `patterns.json` file is now more unversal and the matched text is displayed in the `ORCA FILE OUTLINE` view. Most of the keywords in the ORCA output file are in full capital letters, which is not very user friendly. The matched text is now converted to title case before being displayed in the `ORCA FILE OUTLINE` view. There is a list of keywords in the `keywords.json` file, which will be used to replace some of the converted matched text to its correct form. The list of keywords will be updated in future small releases.
+Bug fixes and optimizations.
 
 ## TODO
 
 - [x] Automatically show TOC view when opening an ORCA output file
+- [X] Support for large ORCA output files (<50MB).
 - [ ] Automatically update TOC view when saving changes to an ORCA output file (additional command to manually refresh TOC view)
 - [ ] Add support for enabling/disabling TOC view for specific file types
 - [ ] Add support for controlling the showing level of TOC entries

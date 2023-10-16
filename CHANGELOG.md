@@ -23,3 +23,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [0.2.0] - 2023-10-15
 
 - This version removed the previous `generate_patterns.py` script and the `headings.md` file. The list of regular expressions in `patterns.json` file is now more unversal and the matched text is displayed in the `ORCA FILE OUTLINE` view. Most of the keywords in the ORCA output file are in full capital letters, which is not very user friendly. The matched text is now converted to title case before being displayed in the `ORCA FILE OUTLINE` view. There is a list of keywords in the `keywords.json` file, which will be used to replace some of the converted matched text to its correct form. The list of keywords will be updated in future small releases.
+
+## [0.2.1] - 2023-10-16
+
+- changed to new plugin icon
+- fixed an error in the regex pattern
+- showOrcaOutline and replaceKeywords are changed to async functions to accelerate the processing speed
+- the parseOrcaFile function is optimized for handing very big orca output files (<50MB). The buffer structure is optimized. The progress of parsing will be showed as a message in VS Code
+- additional error message is added
+
