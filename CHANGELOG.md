@@ -19,3 +19,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [0.1.0] - 2023-10-14
 
 - Update of `patterns.json` file and `headings.md` file. Additional regular expressions added to the list used to parse the ORCA output file. Most frequently used keywords in the ORCA output file are now parsed. The list of regular expressions will be updated in future releases.
+
+## [0.2.0] - 2023-10-15
+
+- This version removed the previous `generate_patterns.py` script and the `headings.md` file. The list of regular expressions in `patterns.json` file is now more unversal and the matched text is displayed in the `ORCA FILE OUTLINE` view. Most of the keywords in the ORCA output file are in full capital letters, which is not very user friendly. The matched text is now converted to title case before being displayed in the `ORCA FILE OUTLINE` view. There is a list of keywords in the `keywords.json` file, which will be used to replace some of the converted matched text to its correct form. The list of keywords will be updated in future small releases.

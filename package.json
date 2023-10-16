@@ -2,7 +2,7 @@
   "name": "orcatoc",
   "displayName": "orca_toc",
   "description": "Provides an outline for ORCA files in the VS Code sidebar.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "engines": {
     "vscode": "^1.82.0"
   },
@@ -18,7 +18,7 @@
     "commands": [
       {
           "command": "extension.showOrcaOutline",
-          "title": "Show Orca Outline"
+          "title": "Show ORCA Outline"
       }
     ],
     "views": {
