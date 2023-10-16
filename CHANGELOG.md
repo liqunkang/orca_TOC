@@ -32,3 +32,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - the parseOrcaFile function is optimized for handing very big orca output files (<50MB). The buffer structure is optimized. The progress of parsing will be showed as a message in VS Code
 - additional error message is added
 
+## [0.2.2] - 2023-10-16
+
+- removed debug lines from extension.js
+- update of keywords.json
+- update of patterns.json. Now the extension could handle both CRLF and LF line breaks in the regular expressions.
