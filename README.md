@@ -12,7 +12,7 @@ N/A
 
 ## Extension Settings
 
-The current version (0.2.1) of this extension does not have any settings.
+The current version (0.2.2) of this extension does not have any settings.
 
 ## Issues and Important Notes
 
@@ -24,7 +24,7 @@ The current version (0.2.1) of this extension does not have any settings.
 
 For detailed release notes, please see [CHANGELOG.md](CHANGELOG.md).
 
-### 0.2.1
+### 0.2.2
 
 Bug fixes and optimizations.
 

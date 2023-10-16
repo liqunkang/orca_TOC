@@ -50,7 +50,7 @@ class OrcaOutlineProvider {
 			});
 		} else {
 			// If there's no element, return the top-level matches
-            console.log(typeof this._matches, this._matches);
+            //console.log(typeof this._matches, this._matches);
 			return this._matches.map(match => {
 				return {
 					label: `${match.title} (Line ${match.line + 1})`,
@@ -173,6 +173,7 @@ function parseOrcaFile(document, filePath) {
                     const line = document.positionAt(match.index).line;
                     let title = match[1] || pattern.title;
                     title = toTitleCase(title.trim());
+                    //console.log(title);
 
                     // Replace keywords in the title
                     //for (let keyword in keywordReplacements) {
@@ -227,7 +228,7 @@ async function replaceKeywords(matches) {
     for (let match of matches) {
         for (let keyword in keywordReplacements) {
             if (match.title.includes(keyword)) {
-                match.title = match.title.replace(keyword, keywordReplacements[keyword]);
+                match.title = match.title.replace(keyword, keywordReplacements[keyword]).trim();
             }
         }
         if (match.children) {
