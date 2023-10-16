@@ -1,18 +1,582 @@
 [
     {
-        "regex": " +\\*{10,}\\s*\\n +\\*(.*?)\\*\\s*\\n +\\*{10,}",
-        "level": 1
+        "regex": "\\* O   R   C   A \\*",
+        "level": 1,
+        "title": "Beginning of ORCA file"
     },
     {
-        "regex": "\\=+\\s*\\n +([^\\n]+)\\s*\\n\\=+",
-        "level": 2
+        "regex": "={80}\\s+INPUT FILE\\s+={80}",
+        "level": 2,
+        "title": "Input File"
     },
     {
-        "regex": "^\\-+\\n\\s+([^\\n\\s]+)\\n\\-+",
-        "level": 3
+        "regex": "\\* Geometry Optimization Run \\*",
+        "level": 2,
+        "title": "Geometry Optimization Run"
     },
     {
-        "regex": "^\\-+\\n([^\\s\\n][^\\n]*)\\n\\-+",
-        "level": 4
+        "regex": "\\*\\*\\* OPTIMIZATION RUN DONE \\*\\*\\*",
+        "level": 3,
+        "title": "Optimization Run Done"
+    },
+    {
+        "regex": "-{78}\\s+ORCA OPTIMIZATION COORDINATE SETUP\\s+-{78}",
+        "level": 3,
+        "title": "ORCA Optimization Coordinate Setup"
+    },
+    {
+        "regex": "\\*\\s+GEOMETRY OPTIMIZATION CYCLE\\s+\\d+\\s+\\*",
+        "level": 3,
+        "title": "Geometry Optimization Cycle"
+    },
+    {
+        "regex": "\\* Single Point Calculation \\*",
+        "level": 2,
+        "title": "Single Point Calculation"
+    },
+    {
+        "regex": "\\* Energy\\+Gradient Calculation \\*",
+        "level": 2,
+        "title": "Energy+Gradient Calculation"
+    },
+    {
+        "regex": "-{33}\\nCARTESIAN COORDINATES \\(ANGSTROEM\\)\\n-{33}",
+        "level": 3,
+        "title": "Cartesian Coordinates"
+    },
+    {
+        "regex": "-{28}\\nCARTESIAN COORDINATES \\(A\\.U\\.\\)\\n-{28}",
+        "level": 3,
+        "title": "Cartesian Coordinates (A.U.)"
+    },
+    {
+        "regex": "-{31}\\nINTERNAL COORDINATES \\(ANGSTROEM\\)\\n-{31}",
+        "level": 3,
+        "title": "Internal Coordinates (Angstroem)"
+    },
+    {
+        "regex": "-{26}\\nINTERNAL COORDINATES \\(A\\.U\\.\\)\\n-{26}",
+        "level": 3,
+        "title": "Internal Coordinates (A.U.)"
+    },
+    {
+        "regex": "-{21}\\nBASIS SET INFORMATION\\n-{21}",
+        "level": 3,
+        "title": "Basis Set Information"
+    },
+    {
+        "regex": "-{25}\\nBASIS SET IN INPUT FORMAT\\n-{25}",
+        "level": 3,
+        "title": "Basis Set Input Format"
+    },
+    {
+        "regex": "-{33}\\nAUXILIARY/J BASIS SET INFORMATION\\n-{33}",
+        "level": 3,
+        "title": "Auxiliary/J Basis Set Information"
+    },
+    {
+        "regex": "-{37}\\nAUXILIARY/J BASIS SET IN INPUT FORMAT\\n-{37}",
+        "level": 3,
+        "title": "Auxiliary/J Basis Set Input Format"
+    },
+    {
+        "regex": "-{33}\\nAUXILIARY/C BASIS SET INFORMATION\\n-{33}",
+        "level": 3,
+        "title": "Auxiliary/C Basis Set Information"
+    },
+    {
+        "regex": "ORCA GTO INTEGRAL CALCULATION",
+        "level": 2,
+        "title": "ORCA GTO Integral Calculation"
+    },
+    {
+        "regex": "-{79}\\s+ORCA SCF\\s+-{79}",
+        "level": 3,
+        "title": "ORCA SCF"
+    },
+    {
+        "regex": "-{12}\\nSCF SETTINGS\\n-{12}",
+        "level": 4,
+        "title": "SCF Settings"
+    },
+    {
+        "regex": "-{22}\\nSHARK INTEGRAL PACKAGE\\n-{22}",
+        "level": 4,
+        "title": "SHARK Integral Package"
+    },
+    {
+        "regex": "-{30}\\nINITIAL GUESS: MODEL POTENTIAL\\n-{30}",
+        "level": 4,
+        "title": "Initial Guess: Model Potential"
+    },
+    {
+        "regex": "-{22}\\nINITIAL GUESS ORBITALS\\n-{22}",
+        "level": 4,
+        "title": "Initial Guess Orbitals"
+    },
+    {
+        "regex": "-{21}\\nINITIAL GUESS: MOREAD\\n-{21}",
+        "level": 4,
+        "title": "Initial Guess: MOREAD"
+    },
+    {
+        "regex": "-{19}\\nDFT GRID GENERATION\\n-{19}",
+        "level": 4,
+        "title": "DFT Grid Generation"
+    },
+    {
+        "regex": "-{20}\\nCOSX GRID GENERATION\\n-{20}",
+        "level": 4,
+        "title": "COSX Grid Generation"
+    },
+    {
+        "regex": "-{14}\\nSCF ITERATIONS\\n-{14}",
+        "level": 4,
+        "title": "SCF Iterations"
+    },
+    {
+        "regex": "-{16}\\nTOTAL SCF ENERGY\\n-{16}",
+        "level": 4,
+        "title": "Total SCF Energy"
+    },
+    {
+        "regex": "-{15}\\nSCF CONVERGENCE\\n-{15}",
+        "level": 4,
+        "title": "SCF Convergence"
+    },
+    {
+        "regex": "-{22}\\nUHF SPIN CONTAMINATION\\n-{22}",
+        "level": 4,
+        "title": "UHF Spin Contamination"
+    },
+    {
+        "regex": "-{79}\\s+ORCA-CASSCF\\s+-{79}",
+        "level": 3,
+        "title": "ORCA-CASSCF"
+    },
+    {
+        "regex": "-{18}\\nCAS-SCF ITERATIONS\\n-{18}",
+        "level": 4,
+        "title": "CAS-SCF Settings"
+    },
+    {
+        "regex": "-{14}\\nCASSCF RESULTS\\n-{14}",
+        "level": 4,
+        "title": "CAS-SCF Results"
+    },
+    {
+        "regex": "-{16}\\nORBITAL ENERGIES\\n-{16}",
+        "level": 4,
+        "title": "Orbital Energies"
+    },
+    {
+        "regex": "SPIN UP ORBITALS",
+        "level": 5,
+        "title": "Spin Up Orbitals"
+    },
+    {
+        "regex": "SPIN DOWN ORBITALS",
+        "level": 5,
+        "title": "Spin Down Orbitals"
+    },
+    {
+        "regex": "-{15,}\\nCAS-SCF STATES.*\\n-{15,}",
+        "level": 4,
+        "title": "CAS-SCF States"
+    },
+    {
+        "regex": "-{14}\\nDENSITY MATRIX\\n-{14}",
+        "level": 4,
+        "title": "Density Matrix"
+    },
+    {
+        "regex": "-{19}\\nSPIN-DENSITY MATRIX\\n-{19}",
+        "level": 4,
+        "title": "Spin-Density Matrix"
+    },
+    {
+        "regex": "-{17}\\nENERGY COMPONENTS\\n-{17}",
+        "level": 4,
+        "title": "Energy Components"
+    },
+    {
+        "regex": "-{18}\\nMOLECULAR ORBITALS\\n-{18}",
+        "level": 4,
+        "title": "Molecular Orbitals"
+    },
+    {
+        "regex": "-{7}\\nDENSITY\\n-{7}",
+        "level": 4,
+        "title": "Density"
+    },
+    {
+        "regex": "-{12}\\nSPIN DENSITY\\n-{12}",
+        "level": 4,
+        "title": "Spin Density"
+    },
+    {
+        "regex": "-{28}\\nLOEWDIN ORBITAL-COMPOSITIONS\\n-{28}",
+        "level": 4,
+        "title": "Loewdin Orbital-Compositions"
+    },
+    {
+        "regex": "-{28}\\nLOEWDIN REDUCED ACTIVE MOs  \\n-{28}",
+        "level": 4,
+        "title": "Loewdin Reduced Active MOs"
+    },
+    {
+        "regex": "-{78}\\s+ORCA POPULATION ANALYSIS\\s+-{78}",
+        "level": 3,
+        "title": "ORCA Population Analysis"
+    },
+    {
+        "regex": "\\* MULLIKEN POPULATION ANALYSIS \\*",
+        "level": 2,
+        "title": "Mulliken Population Analysis"
+    },
+    {
+        "regex": "-{44}\\nMULLIKEN ATOMIC CHARGES AND SPIN POPULATIONS\\n-{44}",
+        "level": 3,
+        "title": "Mulliken Atomic Charges and Spin Populations"
+    },
+    {
+        "regex": "-{42}\\nMULLIKEN ATOMIC CHARGES AND SPIN DENSITIES\\n-{42}",
+        "level": 3,
+        "title": "Mulliken Atomic Charges and Spin Densities"
+    },
+    {
+        "regex": "-{45}\\nMULLIKEN ORBITAL CHARGES AND SPIN POPULAITONS\\n-{45}",
+        "level": 3,
+        "title": "Mulliken Orbital Charges and Spin Populations"
+    },
+    {
+        "regex": "-{53}\\nMULLIKEN REDUCED ORBITAL CHARGES AND SPIN POPULATIONS\\n-{53}",
+        "level": 3,
+        "title": "Mulliken Reduced Orbital Charges and Spin Populations"
+    },
+    {
+        "regex": "-{51}\\nMULLIKEN REDUCED ORBITAL CHARGES AND SPIN DENSITIES\\n-{51}",
+        "level": 3,
+        "title": "Mulliken Reduced Orbital Charges and Spin Densities"
+    },
+    {
+        "regex": "-{24}\\nMULLIKEN OVERLAP CHARGES\\n-{24}",
+        "level": 3,
+        "title": "Mulliken Overlap Charges"
+    },
+    {
+        "regex": "-{35}\\nMULLIKEN ORBITAL POPULATIONS PER MO\\n-{35}",
+        "level": 3,
+        "title": "Mulliken Orbital Populations per MO"
+    },
+    {
+        "regex": "-{21}\\nMULLIKEN ATOMIC CHARGES\\n-{21}",
+        "level": 3,
+        "title": "Mulliken Atomic Charges"
+    },
+    {
+        "regex": "-{32}\\nMULLIKEN REDUCED ORBITAL CHARGES\\n-{32}",
+        "level": 3,
+        "title": "Mulliken Reduced Orbital Charges"
+    },
+    {
+        "regex": "\\* LOEWDIN POPULATION ANALYSIS \\*",
+        "level": 2,
+        "title": "Lowdin Population Analysis"
+    },
+    {
+        "regex": "-{43}\\nLOEWDIN ATOMIC CHARGES AND SPIN POPULATIONS\\n-{43}",
+        "level": 3,
+        "title": "Lowdin Atomic Charges and Spin Populations"
+    },
+    {
+        "regex": "-{41}\\nLOEWDIN ATOMIC CHARGES AND SPIN DENSITIES\\n-{41}",
+        "level": 3,
+        "title": "Lowdin Atomic Charges and Spin Densities"
+    },
+    {
+        "regex": "-{44}\\nLOEWDIN ORBITAL CHARGES AND SPIN POPULATIONS\\n-{44}",
+        "level": 3,
+        "title": "Lowdin Orbital Charges and Spin Populations"
+    },
+    {
+        "regex": "-{52}\\nLOEWDIN REDUCED ORBITAL CHARGES AND SPIN POPULATIONS\\n-{52}",
+        "level": 3,
+        "title": "Lowdin Reduced Orbital Charges and Spin Populations"
+    },
+    {
+        "regex": "-{50}\\nLOEWDIN REDUCED ORBITAL CHARGES AND SPIN DENSITIES\\n-{50}",
+        "level": 3,
+        "title": "Lowdin Reduced Orbital Charges and Spin Densities"
+    },
+    {
+        "regex": "-{33}\\nLOEWDIN BOND ORDERS \\(THRESH 0\\.050000\\)\\n-{33}",
+        "level": 3,
+        "title": "Lowdin Bond Orders"
+    },
+    {
+        "regex": "-{34}\\nLOEWDIN ORBITAL POPULATIONS PER MO\\n-{34}",
+        "level": 3,
+        "title": "Lowdin Orbital Populations per MO"
+    },
+    {
+        "regex": "-{42}\\nLOEWDIN REDUCED ORBITAL POPULATIONS PER MO\\n-{42}",
+        "level": 3,
+        "title": "Lowdin Reduced Orbital Populations per MO"
+    },
+    {
+        "regex": "-{22}\\nLOEWDIN ATOMIC CHARGES\\n-{22}",
+        "level": 3,
+        "title": "Lowdin Atomic Charges"
+    },
+    {
+        "regex": "-{31}\\nLOEWDIN REDUCED ORBITAL CHARGES\\n-{31}",
+        "level": 3,
+        "title": "Lowdin Reduced Orbital Charges"
+    },
+    {
+        "regex": "\\* MAYER POPULATION ANALYSIS \\*",
+        "level": 2,
+        "title": "Mayer Population Analysis"
+    },
+    {
+        "regex": "-{7}\\nTIMINGS\\n-{7}",
+        "level": 4,
+        "title": "Timings"
+    },
+    {
+        "regex": "-{78}\\s+ORCA GEOMETRY RELAXATION STEP\\s+-{78}",
+        "level": 3,
+        "title": "ORCA Geometry Relaxation Step"
+    },
+    {
+        "regex": "-{78}\\s+ORCA SCF GRADIENT CALCULATION\\s+-{78}",
+        "level": 3,
+        "title": "ORCA SCF Gradient Calculation"
+    },
+    {
+        "regex": "-{18}\\nCARTESIAN GRADIENT\\n-{18}",
+        "level": 4,
+        "title": "Cartesian Gradient"
+    },
+    {
+        "regex": "-{78}\\s+ORCA TD-DFT/TDA CALCULATION\\s+-{78}",
+        "level": 3,
+        "title": "ORCA TD-DFT/TDA Calculation"
+    },
+    {
+        "regex": "-{19}\\nXC-INTEGRATION GRID\\n-{19}",
+        "level": 4,
+        "title": "XC-Intergraion Grid"
+    },
+    {
+        "regex": "-{15}\\nTD-DFT XC SETUP\\n-{15}",
+        "level": 4,
+        "title": "TD-DFT XC Setup"
+    },
+    {
+        "regex": "-{24}\\nDAVIDSON-DIAGONALIZATION\\n-{24}",
+        "level": 4,
+        "title": "Davidson-Diagonalization"
+    },
+    {
+        "regex": "-{25}\\nTD-DFT/TDA EXCITED STATES\\n-{25}",
+        "level": 4,
+        "title": "TD-DFT/TDA Excited States"
+    },
+    {
+        "regex": "-{29}\\nTD-DFT/TDA-EXCITATION SPECTRA\\n-{29}",
+        "level": 4,
+        "title": "TD-DFT/TDA-Excitation Spectra"
+    },
+    {
+        "regex": "-{77}\\s+ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS\\s+-{77}",
+        "level": 4,
+        "title": "Absorption Spectrum via Transition Electric Dipole Moments"
+    },
+    {
+        "regex": "-{77}\\s+ABSORPTION SPECTRUM VIA TRANSITION VELOCITY DIPOLE MOMENTS\\s+-{77}",
+        "level": 4,
+        "title": "Absorption Spectrum via Transition Velocity Dipole Moments"
+    },
+    {
+        "regex": "-{23}\\nCIS/TD-DFT TOTAL ENERGY\\n-{23}",
+        "level": 4,
+        "title": "CIS/TD-DFT Total Energy"
+    },
+    {
+        "regex": "FINAL SINGLE POINT ENERGY",
+        "level": 4,
+        "title": "Final Single Point Energy"
+    },
+    {
+        "regex": "-{64}\\s+< NEVPT2  >\\s+-{64}",
+        "level": 3,
+        "title": "NEVPT2"
+    },
+    {
+        "regex": "-{17}\\nRI-TRANSFORMATION.*\\n-{17}",
+        "level": 4,
+        "title": "RI-Transformation"
+    },
+    {
+        "regex": "\\s*={63}\\s+NEVPT2 Results\\s+\\s*={63}",
+        "level": 3,
+        "title": "NEVPT2 Results"
+    },
+    {
+        "regex": "-{23}\\n NEVPT2 TOTAL ENERGIES\\n-{23}",
+        "level": 4,
+        "title": "NEVPT2 Total Energies"
+    },
+    {
+        "regex": "-{44}\\n NEVPT2 CORRECTION TO THE TRANSITION ENERGY\\n-{44}",
+        "level": 4,
+        "title": "NEVPT2 Correlation to the Transition Energy"
+    },
+    {
+        "regex": "-{14}\\nTIMINGS NEVPT2\\n-{14}",
+        "level": 4,
+        "title": "Timings NEVPT2"
+    },
+    {
+        "regex": "={20,}\\s+CASSCF\\(?.*?\\)? UV, CD spectra and dipole moments\\s*={20,}",
+        "level": 3,
+        "title": "CASSCF UV, CD spectra and dipole moments"
+    },
+    {
+        "regex": "-{30,}\\s+ABSORPTION SPECTRUM\\s+-{30,}",
+        "level": 4,
+        "title": "Absorption Spectrum"
+    },
+    {
+        "regex": "-{30,}\\s+CD SPECTRUM\\s+-{30,}",
+        "level": 4,
+        "title": "CD Spectrum"
+    },
+    {
+        "regex": "-{67,}\\s+CD SPECTRUM VIA TRANSITION VELOCITY DIPOLE MOMENTS\\s+-{67,}",
+        "level": 4,
+        "title": "CD Spectrum via Transition Velocity Dipole Moments"
+    },
+    {
+        "regex": "-{30,}\\s+DIPOLE MOMENTS\\s+-{30,}",
+        "level": 4,
+        "title": "Dipole Moments"
+    },
+    {
+        "regex": "\\*     ORCA property calculations      \\*",
+        "level": 2,
+        "title": "ORCA property calculations"
+    },
+    {
+        "regex": "-{78}\\s+ORCA ELECTRIC PROPERTIES CALCULATION\\s+-{78}",
+        "level": 3,
+        "title": "ORCA Electric Properties Calculation"
+    },
+    {
+        "regex": "-{13}\\nDIPOLE MOMENT\\n-{13}",
+        "level": 4,
+        "title": "Dipole Moment"
+    },
+    {
+        "regex": "-{20}\\nRotational spectrum \\n-{20}",
+        "level": 4,
+        "title": "Rotational Spectrum"
+    },
+    {
+        "regex": "-{78}\\s+ORCA SPIN-ORBIT COUPLING CALCULATION\\s+-{78}",
+        "level": 3,
+        "title": "ORCA Spin-Orbit Coupling Calculation"
+    },
+    {
+        "regex": "-{40}\\nSHARK SPIN-ORBIT MEAN FIELD CALCULATION \\n-{40}",
+        "level": 4,
+        "title": "SHARK Spin-Orbit Mean Field Calculation"
+    },
+    {
+        "regex": "-{79}\\s+ORCA SCF HESSIAN\\s+-{79}",
+        "level": 3,
+        "title": "ORCA SCF Hessian"
+    },
+    {
+        "regex": "-{78}\\s+ORCA EPR/NMR CALCULATION\\s+-{78}",
+        "level": 3,
+        "title": "ORCA EPR/NMR Calculation"
+    },
+    {
+        "regex": "-{78}\\s+ORCA CP-SCF CALCULATION\\s+-{78}",
+        "level": 3,
+        "title": "ORCA CP-SCF Calculation"
+    },
+    {
+        "regex": "-{25}\\nTHE POLARIZABILITY TENSOR\\n-{25}",
+        "level": 4,
+        "title": "The Polarisability Tensor"
+    },
+    {
+        "regex": "-{19}\\nELECTRONIC G-MATRIX\\n-{19}",
+        "level": 4,
+        "title": "Electronic G-Matrix"
+    },
+    {
+        "regex": "-{76}\\s+ORCA NUMERICAL FREQUENCIES\\s+-{76}",
+        "level": 3,
+        "title": "ORCA Numerical Frequencies"
+    },
+    {
+        "regex": "-{23}\\nVIBRATIONAL FREQUENCIES\\n-{23}",
+        "level": 4,
+        "title": "Vibrational Frequencies"
+    },
+    {
+        "regex": "-{12}\\nNORMAL MODES\\n-{12}",
+        "level": 4,
+        "title": "Normal Modes"
+    },
+    {
+        "regex": "-{11}\\nIR SPECTRUM\\n-{11}",
+        "level": 4,
+        "title": "IR Spectrum"
+    },
+    {
+        "regex": "-{15}\\nRAMAN SPECTRUM  \\n-{15}",
+        "level": 4,
+        "title": "Raman Spectrum"
+    },
+    {
+        "regex": "-{10,}\\nTHERMOCHEMISTRY.*\\n-{10,}",
+        "level": 4,
+        "title": "Thermochemistry"
+    },
+    {
+        "regex": "-{12}\\nINNER ENERGY\\n-{12}",
+        "level": 4,
+        "title": "Inner Energy"
+    },
+    {
+        "regex": "-{8}\\nENTHALPY\\n-{8}",
+        "level": 4,
+        "title": "Enthalpy"
+    },
+    {
+        "regex": "-{7}\\nENTROPY\\n-{7}",
+        "level": 4,
+        "title": "Entropy"
+    },
+    {
+        "regex": "-{19}\\nGIBBS FREE ENERGY\\n-{19}",
+        "level": 4,
+        "title": "Gibbs Free Energy"
+    },
+    {
+        "regex": "-{78}\\s+ORCA EXCITED STATE DYNAMICS\\s+-{78}",
+        "level": 3,
+        "title": "ORCA Excited State Dynamics"
+    },
+    {
+        "regex": "TOTAL RUN TIME:",
+        "level": 1,
+        "title": "End of ORCA file"
     }
 ]

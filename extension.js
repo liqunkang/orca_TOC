@@ -4,12 +4,12 @@ const path = require('path');
 
 // Synchronously read orcaPatterns.json
 const orcaPatterns = JSON.parse(fs.readFileSync(path.join(__dirname, 'patterns.json'), 'utf8'));
-const keywordReplacements = JSON.parse(fs.readFileSync(path.join(__dirname, 'keywords.json'), 'utf8'));
 
 // Adjust regex patterns to RegExp objects
 orcaPatterns.forEach(pattern => {
     pattern.regex = new RegExp(pattern.regex, 'gm');
 });
+
 
 class OrcaOutlineProvider {
     constructor(matches) {
@@ -82,6 +82,31 @@ class OrcaOutlineProvider {
 
 let orcaOutlineProvider = new OrcaOutlineProvider([]);
 
+class OrcaDocumentSymbolProvider {
+    provideDocumentSymbols(document, token) {
+        const result = [];
+
+        orcaPatterns.forEach(pattern => {
+            let match;
+            while (match = pattern.regex.exec(document.getText())) {
+                const position = document.positionAt(match.index);
+                const range = new vscode.Range(position, position.translate(0, match[0].length));
+
+                const symbolInfo = new vscode.DocumentSymbol(
+                    pattern.title,
+                    '',
+                    pattern.level,
+                    range,
+                    range
+                );
+                result.push(symbolInfo);
+            }
+        });
+
+        return result;
+    }
+}
+
 function showOrcaOutline() {
     const activeEditor = vscode.window.activeTextEditor;
     if (!activeEditor) {
@@ -125,12 +150,6 @@ function activate(context) {
 
 function deactivate() {}
 
-function toTitleCase(str) {
-    return str.replace(/\w\S*/g, function(txt) {
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-    });
-}
-
 function parseOrcaFile(document, filePath) {
     let matches = [];
     let stack = [{ children: matches }];  // A default root node for ease of algorithm
@@ -141,16 +160,9 @@ function parseOrcaFile(document, filePath) {
         let match;
         while (match = pattern.regex.exec(document.getText())) {
             const line = document.positionAt(match.index).line;
-            let title = match[1] || pattern.title;
-            title = toTitleCase(title.trim());
-            for (let keyword in keywordReplacements) {
-                if (title.includes(keyword)) {
-                    title = title.replace(keyword, keywordReplacements[keyword]);
-                }
-            }
             allMatches.push({
                 line: line,
-                title: title,
+                title: pattern.title,
                 level: pattern.level,
                 children: [],
                 command: {
