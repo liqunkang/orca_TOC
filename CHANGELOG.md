@@ -37,3 +37,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - removed debug lines from extension.js
 - update of keywords.json
 - update of patterns.json. Now the extension could handle both CRLF and LF line breaks in the regular expressions.
+
+## [0.2.3] - 2023-10-17
+
+- Bug fixes and optimizations
+- Update of `patterns.json` file
+- Added support for large ORCA output files (>50MB).Added a new command `Show ORCA Outline External` to allow the user to load large ORCA output files manually from the file system.
+- Fixed a bug by adding dummy headings to the `ORCA FILE OUTLINE` view when the heading levels are not in strict ascending order.
