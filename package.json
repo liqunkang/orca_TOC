@@ -19,6 +19,10 @@
       {
           "command": "extension.showOrcaOutline",
           "title": "Show ORCA Outline"
+      },
+      {
+        "command": "extension.showOrcaOutlineExternal",
+        "title": "Show ORCA Outline External"
       }
     ],
     "views": {

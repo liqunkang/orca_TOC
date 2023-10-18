@@ -85,6 +85,7 @@ let orcaOutlineProvider = new OrcaOutlineProvider([]);
 
 async function showOrcaOutline() {  // Make the function asynchronous
     const activeEditor = vscode.window.activeTextEditor;
+    
     if (!activeEditor) {
         // Check if there's a file with .out extension in the workspace
         if (vscode.workspace.textDocuments.some(doc => doc.uri.scheme === 'file' && doc.fileName.endsWith('.out'))) {
@@ -126,33 +127,6 @@ async function showOrcaOutline() {  // Make the function asynchronous
     }
 }
 
-function activate(context) {
-    context.subscriptions.push(vscode.commands.registerCommand('extension.showOrcaOutline', showOrcaOutline));
-    
-    // Register the global instance
-    vscode.window.registerTreeDataProvider('orcaFileOutline', orcaOutlineProvider);
-	// Listen to changes in the active editor
-	context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(editor => {
-		if (editor && editor.document.languageId === 'orcaOut' && editor.document.fileName.endsWith('.out')) {
-			showOrcaOutline();
-		}
-	}));
-    // Initial check if the currently opened document meets the conditions
-    const activeEditor = vscode.window.activeTextEditor;
-    if (activeEditor && activeEditor.document.languageId === 'orcaOut' && activeEditor.document.fileName.endsWith('.out')) {
-        showOrcaOutline();
-    }
-}
-
-function deactivate() {}
-
-function toTitleCase(str) {
-    return str.replace(/\w\S*/g, function(txt) {
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-    });
-}
-
-
 function parseOrcaFile(document, filePath) {
     let matches = [];
     let stack = [{ children: matches }];
@@ -173,17 +147,9 @@ function parseOrcaFile(document, filePath) {
                     const line = document.positionAt(match.index).line;
                     let title = match[1] || pattern.title;
                     title = toTitleCase(title.trim());
-                    //console.log(title);
-
-                    // Replace keywords in the title
-                    //for (let keyword in keywordReplacements) {
-                    //    if (title.includes(keyword)) {
-                    //        title = title.replace(keyword, keywordReplacements[keyword]);
-                    //    }
-                    // }
 
                     allMatches.push({
-                        line: line,
+                        line: line+1,
                         title: title,
                         level: pattern.level,
                         children: [],
@@ -206,6 +172,7 @@ function parseOrcaFile(document, filePath) {
             });
 
             allMatches.sort((a, b) => a.line - b.line);
+            allMatches = insertDummyHeadings(allMatches);
 
             allMatches.forEach(matchItem => {
                 while (stack.length > matchItem.level) {
@@ -221,8 +188,32 @@ function parseOrcaFile(document, filePath) {
     });
 }
 
+function insertDummyHeadings(allMatches) {
+    let correctedMatches = [];
+    let lastMatch = null;
 
-
+    for(let i = 0; i < allMatches.length; i++) {
+        let currentLevel = allMatches[i].level;
+        
+        if (lastMatch && currentLevel - lastMatch.level > 1) {
+            for (let j = 1; j < currentLevel - lastMatch.level; j++) {
+                correctedMatches.push({
+                    line: lastMatch.line,
+                    title: lastMatch.title,
+                    level: lastMatch.level + j,
+                    children: [],
+                    command: null,
+                    tooltip: `Dummy for missing level`
+                });
+            }
+        }
+        
+        correctedMatches.push(allMatches[i]);
+        lastMatch = allMatches[i];
+    }
+    
+    return correctedMatches;
+}
 
 async function replaceKeywords(matches) {
     for (let match of matches) {
@@ -236,6 +227,141 @@ async function replaceKeywords(matches) {
         }
     }
 }
+
+function toTitleCase(str) {
+    return str.replace(/\w\S*/g, function(txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+}
+
+function deactivate() {}
+
+function activate(context) {
+    const orcaProvider = new OrcaFileSystemProvider();
+    context.subscriptions.push(vscode.workspace.registerFileSystemProvider('orca', orcaProvider, { isReadonly: true }));
+    context.subscriptions.push(vscode.commands.registerCommand('extension.showOrcaOutlineExternal', (...args) => showOrcaOutlineExternal(context, ...args)));
+    context.subscriptions.push(vscode.commands.registerCommand('extension.showOrcaOutline', showOrcaOutline));
+    // Register the global instance
+    vscode.window.registerTreeDataProvider('orcaFileOutline', orcaOutlineProvider);
+	// Listen to changes in the active editor
+	context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(editor => {
+		if (editor && editor.document.languageId === 'orcaOut' && editor.document.fileName.endsWith('.out')) {
+			showOrcaOutline();
+		}
+	}));
+    // Initial check if the currently opened document meets the conditions
+    const activeEditor = vscode.window.activeTextEditor;
+    if (activeEditor && activeEditor.document.languageId === 'orcaOut' && activeEditor.document.fileName.endsWith('.out')) {
+        showOrcaOutline();
+    }
+        context.subscriptions.push(vscode.commands.registerCommand('extension.navigateToLine', (lineNumber) => {
+        if (globalEditor) {
+            let position = new vscode.Position(lineNumber, 0);
+            let range = new vscode.Range(position, position);
+            globalEditor.selection = new vscode.Selection(position, position);
+            globalEditor.revealRange(range, vscode.TextEditorRevealType.Default);
+        }
+    }));
+    
+    
+}
+
+
+class OrcaFileSystemProvider {
+    constructor() {
+        this._emitter = new vscode.EventEmitter();
+        this.onDidChangeFile = this._emitter.event;
+    }
+    async readFile(uri) {
+        try {
+            const fsPath = uri.fsPath;
+            const fileStream = fs.createReadStream(fsPath, { encoding: 'utf8', highWaterMark: 1024 * 1024 });  // 1MB chunks
+            let buffer = '';
+            for await (const chunk of fileStream) {
+                buffer += chunk;
+                // Skip lines as per your requirement
+                buffer = buffer.replace(/^(\ {0,3}\d+.*\n)/gm, '\n');
+                // Process buffer with regex here...
+            }
+            return Buffer.from(buffer);
+        } catch (error) {
+            console.error(`Failed to read file: ${error.message}`);
+            throw new Error(`Failed to read file: ${error.message}`);
+        }
+    }
+    watch(uri, options) {
+        const watcher = fs.watch(uri.fsPath, (event, filename) => {
+            if (event === 'change') {
+                this._emitter.fire([{ type: vscode.FileChangeType.Changed, uri }]);
+            }
+        });
+
+        return { dispose: () => watcher.close() };
+    }
+    stat(uri) {
+        try {
+            const stats = fs.statSync(uri.fsPath);
+            const type = stats.isFile() ? vscode.FileType.File : stats.isDirectory() ? vscode.FileType.Directory : vscode.FileType.Unknown;
+            return { type, ctime: stats.ctimeMs, mtime: stats.mtimeMs, size: stats.size };
+        } catch (error) {
+            throw vscode.FileSystemError.FileNotFound(uri);
+        }
+    }
+    readDirectory(uri) {
+        try {
+            const entries = fs.readdirSync(uri.fsPath, { withFileTypes: true });
+            return entries.map(entry => {
+                const type = entry.isFile() ? vscode.FileType.File :
+                             entry.isDirectory() ? vscode.FileType.Directory :
+                             vscode.FileType.Unknown;
+                return [entry.name, type];
+            });
+        } catch (error) {
+            throw vscode.FileSystemError.FileNotFound(uri);
+        }
+    }
+    createDirectory(uri) {
+        throw vscode.FileSystemError.NoPermissions('Creating directories is not allowed.');
+    }
+    writeFile(uri, content, options) {
+        throw vscode.FileSystemError.NoPermissions('Writing to files is not allowed.');
+    }
+    delete(uri, options) {
+        throw vscode.FileSystemError.NoPermissions('Deleting files is not allowed.');
+    }
+    rename(oldUri, newUri, options) {
+        throw vscode.FileSystemError.NoPermissions('Renaming files is not allowed.');
+    }
+}
+
+
+async function showOrcaOutlineExternal(context, uri) {
+
+    // Prompt the user to select a .out file
+    const uris = await vscode.window.showOpenDialog({
+        canSelectFiles: true,
+        canSelectFolders: false,
+        canSelectMany: false,
+        filters: { 'ORCA Files': ['out'] },
+        openLabel: 'Select ORCA file to open...'
+    });
+
+    if (uris && uris.length > 0) {
+        // Change the scheme to 'orca' to trigger the custom file system provider
+        const orcaUri = uris[0].with({ scheme: 'orca' });
+
+        // Attempt to open the document using the custom file system provider
+        try {
+            const doc = await vscode.workspace.openTextDocument(orcaUri);
+            vscode.window.showTextDocument(doc, { preview: false });
+        } catch (error) {
+            vscode.window.showErrorMessage(`Failed to open ORCA file: ${error.message}`);
+        }
+    }
+    
+    
+}
+
 
 
 module.exports = {
