@@ -18,7 +18,7 @@ The current version (0.2.3) of this extension does not have any settings.
 
 ## Issues and Important Notes
 
-- Due to the memory limit of VS Code for large files, could not process files larger than 50MB automatically. This is because the VS Code restricts the size of the `activeEditor` to 50MB, which prevents the extension from getting the contents of the opened ORCA output file.
+- Due to the memory limit of VS Code for large files, could not process files larger than 50MB automatically. This is because the VS Code restricts the size of the `activeEditor` to 50MB, which prevents the extension from getting the contents of the opened ORCA output file. For more details, check the current open issue on Github [#31078](https://github.com/Microsoft/vscode/issues/31078).
 
 - If you have very large ORCA output files, please first consider splitting them into smaller chunks or remove the parts that are not needed (for example full print of the MOs).
 
