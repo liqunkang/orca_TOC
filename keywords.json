@@ -28,8 +28,8 @@
     "In ": "in ",
     "To ": "to ",
     "For ": "for ",
-    "With": "with ",
-    "By": "by ",
+    "With ": "with ",
+    "By ": "by ",
     "Ci-": "CI-",
     "tda": "TDA",
     "Tda": "TDA",
@@ -52,5 +52,7 @@
     "Mr-pt":"MR-PT",
     "Tsel":"TSel",
     "-field":"-Field",
-    "-splitting":"-Splitting"
+    "-splitting":"-Splitting",
+    "Ecp": "ECP",
+    "Xes": "XES"
 }

@@ -44,3 +44,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - Update of `patterns.json` file
 - Added support for large ORCA output files (>50MB).Added a new command `Show ORCA Outline External` to allow the user to load large ORCA output files manually from the file system.
 - Fixed a bug by adding dummy headings to the `ORCA FILE OUTLINE` view when the heading levels are not in strict ascending order.
+
+## [0.2.4] - 2023-10-28
+
+- Update of `keywords.json` file
