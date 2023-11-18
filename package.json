@@ -17,8 +17,8 @@
   "contributes": {
     "commands": [
       {
-          "command": "extension.showOrcaOutline",
-          "title": "Show ORCA Outline"
+        "command": "extension.showOrcaOutline",
+        "title": "Show ORCA Outline"
       },
       {
         "command": "extension.showOrcaOutlineExternal",
@@ -26,22 +26,38 @@
       }
     ],
     "views": {
-        "explorer": [
-            {
-                "id": "orcaFileOutline",
-                "name": "ORCA FILE OUTLINE",
-                "when": "resourceExtname =~ /.out$/"
-            }
-        ]
+      "explorer": [
+        {
+          "id": "orcaFileOutline",
+          "name": "ORCA FILE OUTLINE",
+          "when": "resourceExtname =~ /.out$/"
+        }
+      ]
     },
-    "languages": [{
-      "id": "orcaOut",
-      "extensions": [".out"],
-      "aliases": ["ORCA-output", "orca-output"],
-      "configuration": "./language-configuration.json"
-  }]
+    "languages": [
+      {
+        "id": "orcaOut",
+        "extensions": [
+          ".out"
+        ],
+        "aliases": [
+          "ORCA-output",
+          "orca-output"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "configuration": {
+      "title": "Your Extension Configuration",
+      "properties": {
+        "orcatoc.defaultCollapsed": {
+          "type": "boolean",
+          "default": true,
+          "description": "Control whether the outline is collapsed by default."
+        }
+      }
+    }
   },
-
   "scripts": {
     "lint": "eslint .",
     "pretest": "npm run lint",
@@ -58,8 +74,8 @@
     "@vscode/test-electron": "^2.3.4"
   },
   "repository": {
-   "type": "git",
-    "url": "https://github.com/liqunkang/orca_TOC.git" 
+    "type": "git",
+    "url": "https://github.com/liqunkang/orca_TOC.git"
   },
   "license": "GPL-3.0",
   "publisher": "liqunKang",

@@ -16,58 +16,74 @@ class OrcaOutlineProvider {
         this._matches = matches;
         // Initialize the EventEmitter
         this._onDidChangeTreeData = new vscode.EventEmitter();
-		this._filePath = ""; // Initialize the file path
+        this._filePath = ""; // Initialize the file path
+        this._expandedState = {}; // Initialize the expanded state
     }
 
-	getTreeItem(element) {
-		const treeItem = new vscode.TreeItem(element.label || element.title);
-		if (element.children && element.children.length > 0) {
-			treeItem.collapsibleState = vscode.TreeItemCollapsibleState.Expanded;
-		} else {
-			treeItem.collapsibleState = vscode.TreeItemCollapsibleState.None;
-		}
-		treeItem.command = element.command;
-		treeItem.tooltip = element.tooltip;
-		return treeItem;
-	}
-	
-	getChildren(element) {
-		if (element) {
-			// If we have an element, return its children
-			return element.children.map(child => {
-				return {
-					label: `${child.title} (Line ${child.line + 1})`,
-					children: child.children,  // This will hold any further nested children
-					command: {
-						command: 'vscode.open',
-						arguments: [vscode.Uri.file(this._filePath), {
-							selection: new vscode.Range(child.line, 0, child.line, 0)
-						}],
-						title: 'Open File'
-					},
-					tooltip: `${child.title} (Line ${child.line + 1})`
-				};
-			});
-		} else {
-			// If there's no element, return the top-level matches
+    getTreeItem(element) {
+        const treeItem = new vscode.TreeItem(element.label || element.title);
+    
+        if (element.children && element.children.length > 0) {
+            const defaultCollapsed = vscode.workspace.getConfiguration().get('orcatoc.defaultCollapsed', true);
+    
+            // Check if an expanded state has been set, otherwise use the default
+            const isExpanded = this._expandedState[element.label || element.title];
+            if (isExpanded !== undefined) {
+                treeItem.collapsibleState = isExpanded ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.Collapsed;
+            } else {
+                treeItem.collapsibleState = defaultCollapsed ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.Expanded;
+            }
+        } else {
+            treeItem.collapsibleState = vscode.TreeItemCollapsibleState.None;
+        }
+    
+        treeItem.command = element.command;
+        treeItem.tooltip = element.tooltip;
+        return treeItem;
+    }
+    
+
+    getChildren(element) {
+        if (element) {
+            // If we have an element, return its children
+            return element.children.map(child => {
+                return {
+                    label: `${child.title} (Line ${child.line + 1})`,
+                    children: child.children,  // This will hold any further nested children
+                    command: {
+                        command: 'vscode.open',
+                        arguments: [vscode.Uri.file(this._filePath), {
+                            selection: new vscode.Range(child.line, 0, child.line, 0)
+                        }],
+                        title: 'Open File'
+                    },
+                    tooltip: `${child.title} (Line ${child.line + 1})`
+                };
+            });
+        } else {
+            // If there's no element, return the top-level matches
             //console.log(typeof this._matches, this._matches);
-			return this._matches.map(match => {
-				return {
-					label: `${match.title} (Line ${match.line + 1})`,
-					children: match.children,  // This will hold the first level of children
-					command: {
-						command: 'vscode.open',
-						arguments: [vscode.Uri.file(this._filePath), {
-							selection: new vscode.Range(match.line, 0, match.line, 0)
-						}],
-						title: 'Open File'
-					},
-					tooltip: `${match.title} (Line ${match.line + 1})`
-				};
-			});
-		}
-	}
-	
+            return this._matches.map(match => {
+                return {
+                    label: `${match.title} (Line ${match.line + 1})`,
+                    children: match.children,  // This will hold the first level of children
+                    command: {
+                        command: 'vscode.open',
+                        arguments: [vscode.Uri.file(this._filePath), {
+                            selection: new vscode.Range(match.line, 0, match.line, 0)
+                        }],
+                        title: 'Open File'
+                    },
+                    tooltip: `${match.title} (Line ${match.line + 1})`
+                };
+            });
+        }
+        
+    }
+    
+    setExpandedState(element, isExpanded) {
+        this._expandedState[element.label || element.title] = isExpanded;
+    }
 
     // Only a getter for onDidChangeTreeData
     get onDidChangeTreeData() {
@@ -77,7 +93,17 @@ class OrcaOutlineProvider {
     update(matches, filePath) {
         this._matches = matches;
         this._filePath = filePath; // Store the file path here
-        this._onDidChangeTreeData.fire();
+        // this._onDidChangeTreeData.fire(); // Trigger the event emitter
+        this.refresh(); // Refresh the tree view
+    }
+    // Method to refresh the tree view
+    refresh() {
+        this._onDidChangeTreeData.fire(undefined);
+    }
+
+    // share the matches
+    getParsedMatches() {
+        return this._matches;
     }
 }
 
@@ -131,8 +157,8 @@ class OrcaFileSystemProvider {
             const entries = fs.readdirSync(uri.fsPath, { withFileTypes: true });
             return entries.map(entry => {
                 const type = entry.isFile() ? vscode.FileType.File :
-                            entry.isDirectory() ? vscode.FileType.Directory :
-                            vscode.FileType.Unknown;
+                    entry.isDirectory() ? vscode.FileType.Directory :
+                        vscode.FileType.Unknown;
                 return [entry.name, type];
             });
         } catch (error) {
@@ -159,7 +185,7 @@ let orcaOutlineProvider = new OrcaOutlineProvider([]);
 
 async function showOrcaOutline() {  // Make the function asynchronous
     const activeEditor = vscode.window.activeTextEditor;
-    
+
     if (!activeEditor) {
         // Check if there's a file with .out extension in the workspace
         if (vscode.workspace.textDocuments.some(doc => doc.uri.scheme === 'file' && doc.fileName.endsWith('.out'))) {
@@ -199,6 +225,7 @@ async function showOrcaOutline() {  // Make the function asynchronous
     } catch (error) {
         vscode.window.showErrorMessage(`Error processing the file: ${error.message}`);
     }
+    //orcaOutlineProvider.refresh();  // Refresh the tree view
 }
 
 function parseOrcaFile(document, filePath) {
@@ -223,7 +250,7 @@ function parseOrcaFile(document, filePath) {
                     title = toTitleCase(title.trim());
 
                     allMatches.push({
-                        line: line+1,
+                        line: line + 1,
                         title: title,
                         level: pattern.level,
                         children: [],
@@ -239,7 +266,7 @@ function parseOrcaFile(document, filePath) {
                 }
 
                 progress.report({ message: `Processing Pattern ${index + 1} of ${totalPatterns}`, increment: (100 / totalPatterns) });
-                
+
                 if (token.isCancellationRequested) {
                     reject("Operation was cancelled by the user.");
                 }
@@ -266,9 +293,9 @@ function insertDummyHeadings(allMatches) {
     let correctedMatches = [];
     let lastMatch = null;
 
-    for(let i = 0; i < allMatches.length; i++) {
+    for (let i = 0; i < allMatches.length; i++) {
         let currentLevel = allMatches[i].level;
-        
+
         if (lastMatch && currentLevel - lastMatch.level > 1) {
             for (let j = 1; j < currentLevel - lastMatch.level; j++) {
                 correctedMatches.push({
@@ -281,11 +308,11 @@ function insertDummyHeadings(allMatches) {
                 });
             }
         }
-        
+
         correctedMatches.push(allMatches[i]);
         lastMatch = allMatches[i];
     }
-    
+
     return correctedMatches;
 }
 
@@ -303,12 +330,12 @@ async function replaceKeywords(matches) {
 }
 
 function toTitleCase(str) {
-    return str.replace(/\w\S*/g, function(txt) {
+    return str.replace(/\w\S*/g, function (txt) {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     });
 }
 
-function deactivate() {}
+function deactivate() { }
 
 function activate(context) {
     const orcaProvider = new OrcaFileSystemProvider();
@@ -317,12 +344,40 @@ function activate(context) {
     context.subscriptions.push(vscode.commands.registerCommand('extension.showOrcaOutline', showOrcaOutline));
     // Register the global instance
     vscode.window.registerTreeDataProvider('orcaFileOutline', orcaOutlineProvider);
-	// Listen to changes in the active editor
-	context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(editor => {
-		if (editor && editor.document.languageId === 'orcaOut' && editor.document.fileName.endsWith('.out')) {
-			showOrcaOutline();
-		}
-	}));
+    // Listen to changes in the active editor
+    context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(editor => {
+        if (editor && editor.document.languageId === 'orcaOut' && editor.document.fileName.endsWith('.out')) {
+            showOrcaOutline();
+        }
+    }));
+    // Automatically show outline if a .out file is already open
+    const activeEditor = vscode.window.activeTextEditor;
+    if (activeEditor && activeEditor.document.languageId === 'orcaOut' && activeEditor.document.fileName.endsWith('.out')) {
+        showOrcaOutline();
+    }
+
+    const treeView = vscode.window.createTreeView('orcaFileOutline', { treeDataProvider: orcaOutlineProvider });
+
+    treeView.onDidExpandElement(event => {
+        orcaOutlineProvider.setExpandedState(event.element, true);
+    });
+
+    treeView.onDidCollapseElement(event => {
+        orcaOutlineProvider.setExpandedState(event.element, false);
+    });
+
+
+    vscode.workspace.onDidOpenTextDocument(document => {
+        if (document.languageId === 'orcaOut' && document.fileName.endsWith('.out') && !vscode.window.activeTextEditor) {
+            showOrcaOutline();
+        }
+    });
+    // listen to changes in the configuration
+    context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(e => {
+        if (e.affectsConfiguration('orcatoc.defaultCollapsed')) {
+            orcaOutlineProvider.refresh();
+        }
+    }));
 }
 
 async function showOrcaOutlineExternal(context, uri) {
@@ -348,11 +403,7 @@ async function showOrcaOutlineExternal(context, uri) {
             vscode.window.showErrorMessage(`Failed to open ORCA file: ${error.message}`);
         }
     }
-    
-    
 }
-
-
 
 module.exports = {
     activate,
