@@ -48,3 +48,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [0.2.4] - 2023-10-28
 
 - Update of `keywords.json` file
+
+## [0.3.0] - 2023-11-18
+
+- Added support for saving the collapsed status of the TOC view in the settings of the extension. When navigating to different ORCA output files, the TOC view status for each file will be restored.
+- Added support for automatically showing TOC view when opening an ORCA output file. (bug fix)
+- Added instruction screenshots to this README.
