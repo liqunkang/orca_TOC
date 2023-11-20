@@ -56,7 +56,12 @@
           "description": "Control whether the outline is collapsed by default."
         }
       }
-    }
+    },
+    "grammars": [{
+      "language": "orcaOut",
+      "scopeName": "source.orcaOut",
+      "path": "./syntaxes/orca.tmLanguage.json"
+    }]
   },
   "scripts": {
     "lint": "eslint .",

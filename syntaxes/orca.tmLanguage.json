@@ -1,0 +1,15 @@
+{
+    "scopeName": "source.orcaOut",
+    "name": "ORCA-output",
+    "patterns": [
+      {
+        "name": "constant.numeric.orca",
+        "match": "\\b\\d+\\.?\\d*\\b"
+      },
+      {
+        "name":"markup.heading.1.orca",
+        "match":" +\\*{10,}\\s*\\r?\\n +\\*(.*?)\\*\\s*\\r?\\n"
+      }
+    ]
+  }
+  
