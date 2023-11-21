@@ -8,7 +8,11 @@
       },
       {
         "name":"markup.heading.1.orca",
-        "match":" +\\*{10,}\\s*\\r?\\n +\\*(.*?)\\*\\s*\\r?\\n"
+        "match":" +\\*{10,}\\s*\\r?\\n"
+      },
+      {
+        "name":"markup.quote.orca",
+        "match": "\\|\\s{1,5}\\d+\\> [^\\r?\\n]+"
       }
     ]
   }
