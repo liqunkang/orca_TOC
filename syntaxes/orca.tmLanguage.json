@@ -12,7 +12,18 @@
       },
       {
         "name":"markup.quote.orca",
-        "match": "\\|\\s{1,5}\\d+\\> [^\\r?\\n]+"
+        "match": "\\|\\s+\\d{1,5}> [^\\r?\\n]+"
+      },
+      {
+        "name": "entity.name.section",
+        "begin": "^={80}\\s*$",
+        "end": "^={80}\\s*$",
+        "patterns": [
+          {
+            "name": "keyword.other.title",
+            "match": "\\b(?:INPUT FILE|WARNINGS)\\b"
+          }
+        ]
       }
     ]
   }
