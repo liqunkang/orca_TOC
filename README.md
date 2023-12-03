@@ -27,7 +27,9 @@ N/A
 
 ## Extension Settings
 
-The current version (0.3.0) enables changing the default status of the toggleable TOC view. The default collapsed status of the TOC view can be changed in the settings of the extension. The default value is `true`, which means that the TOC view is collapsed by default. The TOC view can be expanded by clicking on the `ORCA FILE OUTLINE` icon in the sidebar.
+The current version (0.3.1) enables changing the default status of the toggleable TOC view. The default collapsed status of the TOC view can be changed in the settings of the extension. The default value is `true`, which means that the TOC view is collapsed by default. The TOC view can be expanded by clicking on the `ORCA FILE OUTLINE` icon in the sidebar.
+
+The current version (0.3.1) also provide syntax highlighting for the ORCA output file, including the headings, separation lines, numbers, and keywords, etc. The syntax highlighting is enabled by default. The disablling of the syntax highlighting will be added in a future release. The display of the syntax highlighting varies with different themes. Dark themes are recommended for better display of the syntax highlighting.
 
 ![Setting: Collapse TOC view by default](images/setting_collapse_status.png)
 
@@ -49,19 +51,17 @@ The current version (0.3.0) enables changing the default status of the toggleabl
 
 For detailed release notes, please see [CHANGELOG.md](CHANGELOG.md).
 
-### 0.3.0
+### 0.3.1
 
-- Added support for saving the collapsed status of the TOC view in the settings of the extension. When navigating to different ORCA output files, the TOC view status for each file will be restored.
-- Added support for automatically showing TOC view when opening an ORCA output file. (bug fix)
-- Added instruction screenshots to this README.
+- Added grammar syntax highlighting for the ORCA output file (syntax definition is saved in [`orca.tmLanguage.json`](syntaxes/orca.tmLanguage.json))
 
 ## TODO
 
 - [ ] Highlight the corresponding TOC entry when the user is navigating through the ORCA output file based on the current line number.
 - [ ] Foldings feature for the ORCA output file based on the TOC entries.
 - [ ] Add support for the `ORCA FILE OUTLINE` view to automatically scroll to the current line in the ORCA output file.
-- [ ] Formatter for the ORCA output file based on the TOC entries.
-
+- [x] Syntax highliting for the ORCA output file based on the TOC entries.
+- [ ] Add settings for enabling/disabling the syntax highlighting for the ORCA output file.
 
 ## Roadmap
 
@@ -79,6 +79,10 @@ The list of regular expressions is saved in `patterns.json` file. The file conta
 Please submit a pull request if you would like to add a new regular expression to the list. Please also submit a pull request if you would like to modify an existing regular expression.
 
 A list of keywords that are used to format the headings in the TOC view is saved in `keywords.json` file. The matched strings will be formatted using the corresponding keywords. This list is currently not complete and will be updated in a future release.
+
+The syntax definition for the ORCA output file is saved in [`orca.tmLanguage.json`](syntaxes/orca.tmLanguage.json). The syntax definition is based on the [TextMate grammar](https://macromates.com/manual/en/language_grammars) and [VS Code TextMate grammars](https://code.visualstudio.com/api/language-extensions/syntax-highlight-guide#textmate-grammars). The syntax definition is currently not complete and will be updated in a future release.
+
+Please submit a pull request if you would like to add/modify syntax definitions to the ORCA output file.
 
 ## For more information
 

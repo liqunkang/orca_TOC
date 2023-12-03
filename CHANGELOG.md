@@ -54,3 +54,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - Added support for saving the collapsed status of the TOC view in the settings of the extension. When navigating to different ORCA output files, the TOC view status for each file will be restored.
 - Added support for automatically showing TOC view when opening an ORCA output file. (bug fix)
 - Added instruction screenshots to this README.
+
+## [0.3.1] - 2023-12-03
+
+- Added grammar syntax highlighting for the ORCA output file (syntax definition is saved in [`orca.tmLanguage.json`](syntaxes/orca.tmLanguage.json))

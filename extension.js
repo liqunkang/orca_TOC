@@ -185,21 +185,25 @@ let orcaOutlineProvider = new OrcaOutlineProvider([]);
 
 async function showOrcaOutline() {  // Make the function asynchronous
     const activeEditor = vscode.window.activeTextEditor;
-
-    if (!activeEditor) {
-        // Check if there's a file with .out extension in the workspace
-        if (vscode.workspace.textDocuments.some(doc => doc.uri.scheme === 'file' && doc.fileName.endsWith('.out'))) {
-            vscode.window.showErrorMessage("The file might be too large to open! VS Code is unable to operate with files larger than 50MB in active editor. Please consider breaking the file into smaller chunks.");
-        } else {
-            // If there's no file with .out extension in the workspace, show an error message, and Open File button to open the Open File dialog
-            vscode.window.showErrorMessage("No active document found. Please open a file first.", "Open File").then((value) => {
-                if (value === "Open File") {
-                    vscode.commands.executeCommand("workbench.action.files.openFile");
-                }
-            });
-        }
+    if (!activeEditor || !activeEditor.document) {
         return;
     }
+    
+    // if there's no active editor, check if there's a file with .out extension in the workspace
+    // if (!activeEditor) {
+    //     // Check if there's a file with .out extension in the workspace
+    //     if (vscode.workspace.textDocuments.some(doc => doc.uri.scheme === 'file' && doc.fileName.endsWith('.out'))) {
+    //         vscode.window.showErrorMessage("The file might be too large to open! VS Code is unable to operate with files larger than 50MB in active editor. Please consider breaking the file into smaller chunks.");
+    //     } else {
+    //         // If there's no file with .out extension in the workspace, show an error message, and Open File button to open the Open File dialog
+    //         vscode.window.showErrorMessage("No active document found. Please open a file first.", "Open File").then((value) => {
+    //             if (value === "Open File") {
+    //                 vscode.commands.executeCommand("workbench.action.files.openFile");
+    //             }
+    //         });
+    //     }
+    //     return;
+    // }
 
     const document = activeEditor.document;
     try {
@@ -340,8 +344,8 @@ function deactivate() { }
 function activate(context) {
     const orcaProvider = new OrcaFileSystemProvider();
     context.subscriptions.push(vscode.workspace.registerFileSystemProvider('orca', orcaProvider, { isReadonly: true }));
-    context.subscriptions.push(vscode.commands.registerCommand('extension.showOrcaOutlineExternal', (...args) => showOrcaOutlineExternal(context, ...args)));
     context.subscriptions.push(vscode.commands.registerCommand('extension.showOrcaOutline', showOrcaOutline));
+    context.subscriptions.push(vscode.commands.registerCommand('extension.showOrcaOutlineExternal', (...args) => showOrcaOutlineExternal(context, ...args)));
     // Register the global instance
     vscode.window.registerTreeDataProvider('orcaFileOutline', orcaOutlineProvider);
     // Listen to changes in the active editor
@@ -356,6 +360,13 @@ function activate(context) {
         showOrcaOutline();
     }
 
+    // Automatically show outline if a .out file is opened
+    vscode.workspace.onDidOpenTextDocument(document => {
+        if (document.languageId === 'orcaOut' && document.fileName.endsWith('.out') && !vscode.window.activeTextEditor) {
+            showOrcaOutline();
+        }
+    });
+
     const treeView = vscode.window.createTreeView('orcaFileOutline', { treeDataProvider: orcaOutlineProvider });
 
     treeView.onDidExpandElement(event => {
@@ -366,12 +377,6 @@ function activate(context) {
         orcaOutlineProvider.setExpandedState(event.element, false);
     });
 
-
-    vscode.workspace.onDidOpenTextDocument(document => {
-        if (document.languageId === 'orcaOut' && document.fileName.endsWith('.out') && !vscode.window.activeTextEditor) {
-            showOrcaOutline();
-        }
-    });
     // listen to changes in the configuration
     context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(e => {
         if (e.affectsConfiguration('orcatoc.defaultCollapsed')) {

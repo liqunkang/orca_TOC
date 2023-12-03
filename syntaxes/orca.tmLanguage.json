@@ -4,26 +4,81 @@
     "patterns": [
       {
         "name": "constant.numeric.orca",
-        "match": "\\b\\d+\\.?\\d*\\b"
-      },
+        "match": "\\b-?\\d+(\\.\\d+)?([eE][-+]?\\d+)?\\b"
+      },      
       {
-        "name":"markup.heading.1.orca",
-        "match":" +\\*{10,}\\s*\\r?\\n"
-      },
-      {
-        "name":"markup.quote.orca",
-        "match": "\\|\\s+\\d{1,5}> [^\\r?\\n]+"
-      },
-      {
-        "name": "entity.name.section",
-        "begin": "^={80}\\s*$",
-        "end": "^={80}\\s*$",
+        "name": "entity.name.heading.orca",
+        "begin": "^\\s+\\*{5,}\\w*\\*{5,}\\s*$",
+        "beginCaptures": {
+          "0": { "name": "markup.heading.orca" }
+        },
+        "end": "^\\s+\\*{10,}\\s*$",
+        "endCaptures": {
+          "0": { "name": "markup.heading.orca" }
+        },
         "patterns": [
           {
-            "name": "keyword.other.title",
-            "match": "\\b(?:INPUT FILE|WARNINGS)\\b"
+            "name": "markup.heading.orca",
+            "match": "^\\s+\\*.+\\*\\s*$"
           }
         ]
+      },
+      {
+        "name": "string.quoted.other.dashline.orca",
+        "match": "^\\s*\\-{5,}\\s*$"
+      },
+      {
+        "name": "string.quoted.other.equaline.orca",
+        "match": "^\\s*={5,}\\s*$"
+      },
+      {
+        "name": "entity.name.section.orca",
+        "match": "^\\s*[A-Z][A-Z -/():]+$"
+      },
+      {
+        "name": "constant.other.element.orca",
+        "match": "(?<=\\s)(\\d+)?(H|He|Li|Be|B|C|N|O|F|Ne|Na|Mg|Al|Si|P|S|Cl|Ar|K|Ca|Sc|Ti|V|Cr|Mn|Fe|Co|Ni|Cu|Zn|Ga|Ge|As|Se|Br|Kr|Rb|Sr|Y|Zr|Nb|Mo|Tc|Ru|Rh|Pd|Ag|Cd|In|Sn|Sb|Te|I|Xe|Cs|Ba|La|Ce|Pr|Nd|Pm|Sm|Eu|Gd|Tb|Dy|Ho|Er|Tm|Yb|Lu|Hf|Ta|W|Re|Os|Ir|Pt|Au|Hg|Tl|Pb|Bi|Po|At|Rn|Fr|Ra|Ac|Th|Pa|U|Np|Pu|Am|Cm|Bk|Cf|Es|Fm|Md|No|Lr)(?=\\s)"
+      },
+      {
+        "name": "storage.type.orbital.orca",
+        "match": "(?<=\\s)(\\d+)?(?:s {4}|px {3}|py {3}|pz {3}|dz2 {2}|dx2y2|dxy {2}|dxz {2}|dyz {2}|f0 {3}|f\\+1 {2}|f-1 {2}|f\\+2 {2}|f-2 {2}|f\\+3 {2}|f-3 {2})(?=\\s)"
+      },
+      {
+        "name": "keyword.control.orca",
+        "match": "\\b(done|true|false|yes|no|on|off|ON|OFF|YES|NO|NOT USED|NOT available|AVAILABLE|ok|auto)\\b"
+      },
+      {
+        "name": "comment.block.orca",
+        "match": "^\\s*\\*{3,}\\s*[^*]+\\s*\\*{3,}\\s*$"
+      },
+      {
+        "name": "string.quoted.orca",
+        "match": "^\\|\\s*\\d+>.*$"
+      },
+      {
+        "name": "storage.type.arrow.orca",
+        "match": "\\-+>|\\=+>"
+      },
+
+      {
+        "name": "variable.language.orca",
+        "match": "^.*?(?=\\.\\.\\.)"
+      },
+      {
+        "name": "variable.parameter.orca",
+        "match": "^.*?(?=\\:)"
+      },
+      {
+        "name": "variable.other.constant.orca",
+        "match": "^.*?(?=\\=)"
+      },
+      {
+        "name": "keyword.other.orca",
+        "match": "\\b(DKH|SCF|ORCA|UHF|GTO|CIS|DFT|TRAH|HOMO|LUMO|PBE|NewAuxJGTO|NewGTO|OCC|SOC|XES|XAS)\\b"
+      },
+      {
+        "name": "storage.type.unit.orca",
+        "match": "(?<=\\s|\\()((days|min|hours|sec|MB|%|eV|cm-1|Eh|Eh\\/bohr|bohr|minutes|seconds|msec|au|nm|cgs)(?=\\s|\\)))"
       }
     ]
   }
