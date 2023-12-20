@@ -78,7 +78,7 @@
       },
       {
         "name": "storage.type.unit.orca",
-        "match": "(?<=\\s|\\()((days|min|hours|sec|MB|%|eV|cm-1|Eh|Eh\\/bohr|bohr|minutes|seconds|msec|au|nm|cgs)(?=\\s|\\)))"
+        "match": "(?<=\\s|\\()((days|min|hours|sec|MB|%|eV|cm-1|Eh|Eh\\/bohr|bohr|minutes|seconds|msec|au|nm|cgs|electrons)(?=\\s|\\)))"
       }
     ]
   }
