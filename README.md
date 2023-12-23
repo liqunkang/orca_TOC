@@ -19,6 +19,8 @@ This extension provides a separate toggleable TOC view in the sidebar. The TOC v
 
 The TOC view can be toggled on and off by clicking on the `ORCA FILE OUTLINE` icon in the sidebar. The TOC view can also be toggled on by running the command `Show ORCA Outline` from the command palette. On Windows, the command palette can be opened with `Ctrl+Shift+P`, on Mac it is `Cmd+Shift+P`. The TOC view is automatically updated when navigating to a different ORCA output file.
 
+This plugin also provides syntax highlighting for the ORCA output file, including the headings, separation lines, numbers, and keywords, etc. The display of the syntax highlighting varies with different themes. Dark themes are recommended for better display of the syntax highlighting. To temporarily disable the syntax highlighting, please use the command `Change Language Mode` from the command palette and select `Plain Text`. To switch back to the syntax highlighting, please use the command `Change Language Mode` from the command palette and select `Auto Detect` or `ORCA-output`.
+
 ![Command Palette Example](images/command_palette_example.png)
 
 ## Requirements
@@ -28,8 +30,6 @@ N/A
 ## Extension Settings
 
 The current version (0.3.1) enables changing the default status of the toggleable TOC view. The default collapsed status of the TOC view can be changed in the settings of the extension. The default value is `true`, which means that the TOC view is collapsed by default. The TOC view can be expanded by clicking on the `ORCA FILE OUTLINE` icon in the sidebar.
-
-The current version (0.3.1) also provide syntax highlighting for the ORCA output file, including the headings, separation lines, numbers, and keywords, etc. The syntax highlighting is enabled by default. The disablling of the syntax highlighting will be added in a future release. The display of the syntax highlighting varies with different themes. Dark themes are recommended for better display of the syntax highlighting.
 
 ![Setting: Collapse TOC view by default](images/setting_collapse_status.png)
 
@@ -62,6 +62,7 @@ For detailed release notes, please see [CHANGELOG.md](CHANGELOG.md).
 - [ ] Add support for the `ORCA FILE OUTLINE` view to automatically scroll to the current line in the ORCA output file.
 - [x] Syntax highliting for the ORCA output file based on the TOC entries.
 - [ ] Add settings for enabling/disabling the syntax highlighting for the ORCA output file.
+- [ ] Add command for unfold/fold all TOC entries
 
 ## Roadmap
 
