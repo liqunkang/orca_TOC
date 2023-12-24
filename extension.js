@@ -18,15 +18,21 @@ class OrcaOutlineProvider {
         this._onDidChangeTreeData = new vscode.EventEmitter();
         this._filePath = ""; // Initialize the file path
         this._expandedState = {}; // Initialize the expanded state
-        this.documentExpandedStates = new Map(); // Stores expanded states for each document
     }
 
     getTreeItem(element) {
         const treeItem = new vscode.TreeItem(element.label || element.title);
     
         if (element.children && element.children.length > 0) {
-            const isFolded = this.documentExpandedStates.get(this._filePath);
-            treeItem.collapsibleState = isFolded ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.Expanded;
+            const defaultCollapsed = vscode.workspace.getConfiguration().get('orcatoc.defaultCollapsed', true);
+    
+            // Check if an expanded state has been set, otherwise use the default
+            const isExpanded = this._expandedState[element.label || element.title];
+            if (isExpanded !== undefined) {
+                treeItem.collapsibleState = isExpanded ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.Collapsed;
+            } else {
+                treeItem.collapsibleState = defaultCollapsed ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.Expanded;
+            }
         } else {
             treeItem.collapsibleState = vscode.TreeItemCollapsibleState.None;
         }
@@ -36,8 +42,7 @@ class OrcaOutlineProvider {
         return treeItem;
     }
     
-    
-    
+
     getChildren(element) {
         if (element) {
             // If we have an element, return its children
@@ -73,6 +78,7 @@ class OrcaOutlineProvider {
                 };
             });
         }
+        
     }
     
     setExpandedState(element, isExpanded) {
@@ -86,46 +92,18 @@ class OrcaOutlineProvider {
 
     update(matches, filePath) {
         this._matches = matches;
-        this._filePath = filePath;
-
-        // Initialize the expanded state for this document if not already present
-        if (!this.documentExpandedStates.has(filePath)) {
-            const defaultCollapsed = vscode.workspace.getConfiguration().get('orcatoc.defaultCollapsed', true);
-            this.documentExpandedStates.set(filePath, !defaultCollapsed);
-        }
-
-        this.refresh();
+        this._filePath = filePath; // Store the file path here
+        // this._onDidChangeTreeData.fire(); // Trigger the event emitter
+        this.refresh(); // Refresh the tree view
     }
     // Method to refresh the tree view
     refresh() {
-        console.log("Refreshing tree view");
         this._onDidChangeTreeData.fire(undefined);
     }
 
     // share the matches
     getParsedMatches() {
         return this._matches;
-    }
-
-    // Fold/Unfold all TOC entries for the current document
-    foldUnfoldAll() {
-        if (this.documentExpandedStates.has(this._filePath)) {
-            let isFolded = this.documentExpandedStates.get(this._filePath);
-            isFolded = !isFolded; // Toggle the state
-            this.documentExpandedStates.set(this._filePath, isFolded);
-
-            // Apply the new state to all entries
-            this.applyFoldState(this._matches, isFolded);
-        }
-    }
-
-    applyFoldState(matches, isFolded) {
-        for (let match of matches) {
-            this.setExpandedState(match, !isFolded);
-            if (match.children) {
-                this.applyFoldState(match.children, isFolded); // Recursive call
-            }
-        }
     }
 }
 
@@ -202,11 +180,8 @@ class OrcaFileSystemProvider {
     }
 }
 
-// Create a global instance of the provider
+
 let orcaOutlineProvider = new OrcaOutlineProvider([]);
-// get the default collapsed state from the configuration
-let isTOCFolded = vscode.workspace.getConfiguration().get('orcatoc.defaultCollapsed', true);
-console.log("isTOCFolded", isTOCFolded);
 
 async function showOrcaOutline() {  // Make the function asynchronous
     const activeEditor = vscode.window.activeTextEditor;
@@ -402,9 +377,11 @@ function activate(context) {
         orcaOutlineProvider.setExpandedState(event.element, false);
     });
 
-    // register the command to fold or unfold all matched TOC entries
-    context.subscriptions.push(vscode.commands.registerCommand('extension.foldUnfoldAll', () => {
-        orcaOutlineProvider.foldUnfoldAll();
+    // listen to changes in the configuration
+    context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(e => {
+        if (e.affectsConfiguration('orcatoc.defaultCollapsed')) {
+            orcaOutlineProvider.refresh();
+        }
     }));
 }
 
