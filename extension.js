@@ -18,65 +18,46 @@ class OrcaOutlineProvider {
         this._onDidChangeTreeData = new vscode.EventEmitter();
         this._filePath = ""; // Initialize the file path
         this._expandedState = {}; // Initialize the expanded state
-
-        // // Initialize default states
-        // this.initializeDefaultStates();
+        this._currentDocumentIdentifier = ""; // Initialize the current document identifier
     }
-    // initializeDefaultStates() {
-    //     const defaultCollapsed = vscode.workspace.getConfiguration().get('orcatoc.defaultCollapsed', true);
-    //     this._matches.forEach(match => {
-    //         const key = createExpandedStateKey(this._filePath, match.title);
-    //         this._expandedState[key] = !defaultCollapsed;
-    //         console.log(`[initializeDefaultStates] Key: ${key}, State: ${!defaultCollapsed}`);
-    //     });
-    // }
 
     getTreeItem(element) {
-        const treeItem = new vscode.TreeItem(element.label);
-        const key = createExpandedStateKey(this._filePath, element.label);
-    
-        console.log(`[getTreeItem] Current Expanded State:`, this._expandedState);
-        console.log(`[getTreeItem] Accessing State for Key: ${key}`);
-    
-        const isExpanded = this._expandedState[key];
-        console.log(`[getTreeItem] Retrieved State for ${key}: ${isExpanded}`);
+        // const treeItem = new vscode.TreeItem(element.label || element.title);
 
-        
-        if (element.children && element.children.length > 0) {
-            const defaultCollapsed = vscode.workspace.getConfiguration().get('orcatoc.defaultCollapsed', true);
-    
-            // Check if an expanded state has been set, otherwise use the default
-            //const isExpanded = this._expandedState[element.label || element.title];
-            // const key = `${this._filePath}::${element.label || element.title}`;
-            // console.log(`[getTreeItem] Key for expanded state: ${key}`);
-            // const isExpanded = this._expandedState[key];
-            // console.log(`[getTreeItem] Expanded State for ${key}: ${isExpanded}`);  // Debug log
+        // if (element.children && element.children.length > 0) { // Check if the element has children
+        //     const defaultCollapsed = vscode.workspace.getConfiguration().get('orcatoc.defaultCollapsed', true);
+        //     const isExpanded = this._expandedState[this._currentDocumentIdentifier][element.label];
+        //     // const isExpanded = this._expandedState[element.identifier];
             
-            // if (isExpanded !== undefined) {
-            //     treeItem.collapsibleState = isExpanded ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.Collapsed;
-            // } else {
-            //     treeItem.collapsibleState = defaultCollapsed ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.Expanded;
-            // }
-            if (isExpanded !== undefined) {
-                treeItem.collapsibleState = isExpanded ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.Collapsed;
-                // change the collapsibleState for each element in the tree view
-                console.log(`[getTreeItem] Setting collapsible state for key ${key} to ${isExpanded}`);  // Debug log
-            } else {
-                treeItem.collapsibleState = defaultCollapsed ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.Expanded;
-                console.log(`[getTreeItem] Setting collapsible state for key ${key} to ${defaultCollapsed}`);  // Debug log
-            }
+        //     if (isExpanded !== undefined) {
+        //         treeItem.collapsibleState = isExpanded ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.Collapsed;
+        //     } else {
+        //         treeItem.collapsibleState = defaultCollapsed ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.Expanded;
+        //     }
+        // } else {
+        //     treeItem.collapsibleState = vscode.TreeItemCollapsibleState.None;
+        // }
+
+        const treeItem = new vscode.TreeItem(element.label || element.title);
+        const identifier = `${this._filePath}::${element.label}`;
+
+        if (element.children && element.children.length > 0) {
+            const isExpanded = this._expandedState[this._currentDocumentIdentifier] &&
+                               this._expandedState[this._currentDocumentIdentifier][identifier];
+            treeItem.collapsibleState = isExpanded ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.Collapsed;
+            console.log(`TreeItem: ${element.label}, Identifier: ${identifier}, Expanded: ${isExpanded}`);
         } else {
             treeItem.collapsibleState = vscode.TreeItemCollapsibleState.None;
-            // console.log(`[getTreeItem] No children for ${element.label || element.title}`);  // Debug log
         }
-    
+        // console.log(`[getTreeItem] Expanded state for ${this._currentDocumentIdentifier}: ${JSON.stringify(this._expandedState[this._currentDocumentIdentifier])}`);
+        
         treeItem.command = element.command;
         treeItem.tooltip = element.tooltip;
-        // console.log(`[getTreeItem] Tooltip for ${element.label || element.title}: ${element.tooltip}`);  // Debug log
+        // console.log(`[getTreeItem] Tree item for ${this._currentDocumentIdentifier} created: ${JSON.stringify(treeItem)}`);
         return treeItem;
     }
     
-
+    
     getChildren(element) {
         if (element) {
             // If we have an element, return its children
@@ -91,7 +72,8 @@ class OrcaOutlineProvider {
                         }],
                         title: 'Open File'
                     },
-                    tooltip: child.tooltip || `${child.title} (Line ${child.line + 1})` // Ensure tooltip is defined
+                    tooltip: `${child.title} (Line ${child.line + 1})`,
+                    identifier: `${this._filePath}::${child.title} (Line ${child.line + 1})`
                 };
             });
         } else {
@@ -108,22 +90,81 @@ class OrcaOutlineProvider {
                         }],
                         title: 'Open File'
                     },
-                    tooltip: `${match.title} (Line ${match.line + 1})`
+                    tooltip: `${match.title} (Line ${match.line + 1})`,
+                    identifier: `${this._filePath}::${match.title} (Line ${match.line + 1})`
                 };
             });
         }
-        
+    // return element ? element.children.map(child => this.createChildElement(child)) : this._matches.map(match => this.createChildElement(match));
     }
-    
+
     // setExpandedState(element, isExpanded) {
-    //     this._expandedState[element.label || element.title] = isExpanded;
+    //     const identifier = `${this._filePath}::${element.label}`;
+    //     this._expandedState[this._currentDocumentIdentifier][element.identifier] = isExpanded;
+    //     console.log(`[setExpandedState] Expanded state for ${this._currentDocumentIdentifier} updated: ${JSON.stringify(this._expandedState[this._currentDocumentIdentifier])}`);
     // }
 
-    setExpandedState(element, isExpanded, key) {
-        // Use the provided key directly
-        this._expandedState[key] = isExpanded;
-        console.log(`[setExpandedState] Key: ${key}, State: ${isExpanded}`);
+    setExpandedState(element, isExpanded) {
+        const identifier = `${this._filePath}::${element.label}`;
+        
+        if (!this._expandedState[this._currentDocumentIdentifier]) {
+            this._expandedState[this._currentDocumentIdentifier] = {};
+        }
+        this._expandedState[this._currentDocumentIdentifier][identifier] = isExpanded;
+        console.log(`[setExpandedState] Expanded state for ${this._currentDocumentIdentifier} updated: ${JSON.stringify(this._expandedState[this._currentDocumentIdentifier])}`);
     }
+    
+
+    // updateExpandedStatesForCurrentDocument(filePath) {
+    //     // Update the identifier for the current document
+    //     this._currentDocumentIdentifier = filePath;
+    //     // restore the expanded state for the current document if it exists
+    //     if (this._expandedState[this._currentDocumentIdentifier]) {
+    //         console.log(`Expanded state for ${this._currentDocumentIdentifier} restored: ${JSON.stringify(this._expandedState[this._currentDocumentIdentifier])}`);
+    //     }
+    //     else {
+    //         // Initialize the expanded state for the current document and set all nodes to collapsed
+    //         this._expandedState[this._currentDocumentIdentifier] = {};
+    //         this._matches.forEach(match => {
+    //             this._expandedState[this._currentDocumentIdentifier][`${match.title} (Line ${match.line + 1})`] = false;
+    //         });
+    //     }
+
+    //     // Apply the expanded states specific to the current document
+    //     this.refresh();
+    // }
+
+    // updateExpandedStatesForCurrentDocument(filePath) {
+    //     this._currentDocumentIdentifier = filePath;
+    //     console.log(`[updateExpandedStatesForCurrentDocument] Expanded state for ${this._currentDocumentIdentifier} restored: ${JSON.stringify(this._expandedState[this._currentDocumentIdentifier])}`);
+    //     if (!this._expandedState[this._currentDocumentIdentifier]) {
+    //         // Initialize the expanded state for new document
+    //         this._expandedState[this._currentDocumentIdentifier] = {};
+    //         this._matches.forEach(match => {
+    //             const identifier = `${filePath}::${match.title} (Line ${match.line + 1})`;
+    //             this._expandedState[this._currentDocumentIdentifier][identifier] = false; // default state
+    //         });
+    //     }
+    //     console.log(`[updateExpandedStatesForCurrentDocument] Expanded state for ${this._currentDocumentIdentifier} updated: ${JSON.stringify(this._expandedState[this._currentDocumentIdentifier])}`);
+    //     // Apply the expanded states specific to the current document
+    //     this.refresh();
+    // }
+    
+    async updateExpandedStatesForCurrentDocument(filePath) {
+        this._currentDocumentIdentifier = filePath;
+        if (!this._expandedState[this._currentDocumentIdentifier]) {
+            // Initialize the expanded state for new document
+            this._expandedState[this._currentDocumentIdentifier] = {};
+            for (const match of this._matches) {
+                const identifier = `${filePath}::${match.title} (Line ${match.line + 1})`;
+                this._expandedState[this._currentDocumentIdentifier][identifier] = false; // default state
+            }
+        }
+        console.log(`[updateExpandedStatesForCurrentDocument] Expanded state for ${this._currentDocumentIdentifier} updated: ${JSON.stringify(this._expandedState[this._currentDocumentIdentifier])}`);
+        this.refresh();
+    }
+    
+    
 
     // Only a getter for onDidChangeTreeData
     get onDidChangeTreeData() {
@@ -131,52 +172,24 @@ class OrcaOutlineProvider {
     }
 
     update(matches, filePath) {
-        console.log(`[update] Setting _filePath to: ${filePath}`);
         this._matches = matches;
         this._filePath = filePath; // Store the file path here
         // this._onDidChangeTreeData.fire(); // Trigger the event emitter
-        // Re-initialize expanded state for new matches
-        this.initializeExpandedStateForMatches();
-        this.refresh(); // Refresh the tree view
+        // this.refresh(); // Refresh the tree view
+
+        //print the expanded state
+        // console.log(`Expanded state for ${this._currentDocumentIdentifier}: ${JSON.stringify(this._expandedState[this._currentDocumentIdentifier])}`);
     }
     // Method to refresh the tree view
     refresh() {
-        this._onDidChangeTreeData.fire(undefined);
+        this._onDidChangeTreeData.fire(undefined); // Trigger the event emitter
     }
 
     // share the matches
     getParsedMatches() {
         return this._matches;
     }
-    // New method to initialize expanded states for matches
-    initializeExpandedStateForMatches() {
-        const defaultCollapsed = vscode.workspace.getConfiguration().get('orcatoc.defaultCollapsed', true);
-        this._matches.forEach(match => {
-            const key = createExpandedStateKey(this._filePath, match.tooltip || `${match.title} (Line ${match.line + 1})`);
-            this._expandedState[key] = !defaultCollapsed;
-        });
-    }
 }
-
-function createExpandedStateKey(filePath, tooltip) {
-    if (!tooltip) {
-        console.error('[createExpandedStateKey] Tooltip is undefined');
-        return null; // Return null or handle undefined tooltip
-    }
-    const key = `${filePath}::${tooltip}`;
-    console.log(`[createExpandedStateKey] Generated Key: ${key}`);
-    return key;
-}
-
-function initializeExpandedStateForMatches(matches, filePath) {
-    const defaultCollapsed = vscode.workspace.getConfiguration().get('orcatoc.defaultCollapsed', true);
-    matches.forEach(match => {
-        const key = createExpandedStateKey(filePath, match.tooltip);
-        // Directly use the generated key
-        orcaOutlineProvider.setExpandedState({ label: match.title }, !defaultCollapsed, key);
-    });
-}
-
 
 
 class OrcaFileSystemProvider {
@@ -291,20 +304,16 @@ async function showOrcaOutline() {  // Make the function asynchronous
         // Apply keyword replacements to the matches
         await replaceKeywords(matches);  // Wait for the promise to resolve
 
-        // Initialize expanded state for new matches
-        // initializeExpandedStateForMatches(matches, document.uri.fsPath);
-
-        orcaOutlineProvider.update(matches, document.uri.fsPath);  // Update the global instance of the provider
-
+        await orcaOutlineProvider.update(matches, document.uri.fsPath);  // Update the global instance of the provider
+        console.log(`[showOrcaOutline] Expanded state for ${orcaOutlineProvider._currentDocumentIdentifier} updated: ${JSON.stringify(orcaOutlineProvider._expandedState[orcaOutlineProvider._currentDocumentIdentifier])}`);
+        // sleep for 1 second
+        // await new Promise(resolve => setTimeout(resolve, 10000));
+        
+        orcaOutlineProvider.updateExpandedStatesForCurrentDocument(document.uri.fsPath);
+        console.log(`[showOrcaOutline] Expanded state for ${orcaOutlineProvider._currentDocumentIdentifier} updated: ${JSON.stringify(orcaOutlineProvider._expandedState[orcaOutlineProvider._currentDocumentIdentifier])}`);
         // The keyword replacement seems to be commented out, but if you decide to use it again, make sure to await it as well
         // await replaceKeywords(matches);  
         // orcaOutlineProvider.update(matches, document.uri.fsPath);
-
-        // // Now, set the expanded state after the file path is updated
-        // const defaultCollapsed = vscode.workspace.getConfiguration().get('orcatoc.defaultCollapsed', true);
-        // await matches.forEach(match => {
-        //     orcaOutlineProvider.setExpandedState({ label: match.title }, !defaultCollapsed);
-        // });
 
     } catch (error) {
         vscode.window.showErrorMessage(`Error processing the file: ${error.message}`);
@@ -345,7 +354,8 @@ function parseOrcaFile(document, filePath) {
                             }],
                             title: 'Open File'
                         },
-                        tooltip: `${pattern.title} (Line ${line + 1})`
+                        tooltip: `${pattern.title} (Line ${line + 1})`,
+                        identifier: `${filePath}::${pattern.title} (Line ${line + 1})`
                     });
                 }
 
@@ -360,7 +370,6 @@ function parseOrcaFile(document, filePath) {
             allMatches = insertDummyHeadings(allMatches);
 
             allMatches.forEach(matchItem => {
-
                 while (stack.length > matchItem.level) {
                     stack.pop();
                 }
@@ -373,7 +382,7 @@ function parseOrcaFile(document, filePath) {
         });
     });
 }
-
+// Insert dummy headings for missing levels
 function insertDummyHeadings(allMatches) {
     let correctedMatches = [];
     let lastMatch = null;
@@ -389,7 +398,8 @@ function insertDummyHeadings(allMatches) {
                     level: lastMatch.level + j,
                     children: [],
                     command: null,
-                    tooltip: `Dummy for missing level`
+                    tooltip: `Dummy for missing level`,
+                    identifier: `${lastMatch.title} (Line ${lastMatch.line + 1})`
                 });
             }
         }
@@ -397,7 +407,6 @@ function insertDummyHeadings(allMatches) {
         correctedMatches.push(allMatches[i]);
         lastMatch = allMatches[i];
     }
-
     return correctedMatches;
 }
 
@@ -430,9 +439,12 @@ function activate(context) {
     // Register the global instance
     vscode.window.registerTreeDataProvider('orcaFileOutline', orcaOutlineProvider);
     // Listen to changes in the active editor
-    context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(editor => {
+    context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(async (editor) => {
         if (editor && editor.document.languageId === 'orcaOut' && editor.document.fileName.endsWith('.out')) {
-            showOrcaOutline();
+            await showOrcaOutline();
+            orcaOutlineProvider.updateExpandedStatesForCurrentDocument(editor.document.uri.fsPath);
+            // console.log(`[onDidChangeActiveTextEditor] Expanded state for ${orcaOutlineProvider._currentDocumentIdentifier} updated: ${JSON.stringify(orcaOutlineProvider._expandedState[orcaOutlineProvider._currentDocumentIdentifier])}`);
+            // orcaOutlineProvider.refresh();
         }
     }));
     // Automatically show outline if a .out file is already open
