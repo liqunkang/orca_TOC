@@ -47,8 +47,7 @@
         "aliases": [
           "ORCA-output",
           "orca-output"
-        ],
-        "configuration": "./language-configuration.json"
+        ]
       }
     ],
     "configuration": {
