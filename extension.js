@@ -20,49 +20,21 @@ class OrcaOutlineProvider {
         this._expandedState = {}; // Initialize the expanded state
     }
 
-    // getTreeItem(element) {
-    //     const treeItem = new vscode.TreeItem(element.label || element.title);
-    
-    //     if (element.children && element.children.length > 0) {
-    //         const defaultCollapsed = vscode.workspace.getConfiguration().get('orcatoc.defaultCollapsed', true);
-    
-    //         // Check if an expanded state has been set, otherwise use the default
-    //         const isExpanded = this._expandedState[element.label || element.title];
-    //         if (isExpanded !== undefined) {
-    //             treeItem.collapsibleState = isExpanded ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.Collapsed;
-    //         } else {
-    //             treeItem.collapsibleState = defaultCollapsed ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.Expanded;
-    //         }
-    //     } else {
-    //         treeItem.collapsibleState = vscode.TreeItemCollapsibleState.None;
-    //     }
-    
-    //     treeItem.command = element.command;
-    //     treeItem.tooltip = element.tooltip;
-    //     return treeItem;
-    // }
-
     getTreeItem(element) {
         const treeItem = new vscode.TreeItem(element.label || element.title);
-        
+    
         if (element.children && element.children.length > 0) {
             const defaultCollapsed = vscode.workspace.getConfiguration().get('orcatoc.defaultCollapsed', true);
-            const identifier = `${this._filePath}::${element.label || element.title}`;
-            const isExpanded = this._expandedState[identifier];
-            // console.log(`[getTreeItem] Expanded state for ${identifier} retrieved: ${isExpanded}`);
     
+            // Check if an expanded state has been set, otherwise use the default
+            const isExpanded = this._expandedState[element.label || element.title];
             if (isExpanded !== undefined) {
                 treeItem.collapsibleState = isExpanded ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.Collapsed;
-                // console.log(`[getTreeItem] Set tree item ${identifier} state to ${isExpanded ? 'Expanded' : 'Collapsed'}`);
-                this._expandedState[identifier] = isExpanded;
             } else {
                 treeItem.collapsibleState = defaultCollapsed ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.Expanded;
-                // console.log(`[getTreeItem] Set tree item state to default: ${defaultCollapsed ? 'Collapsed' : 'Expanded'}`);
-                this._expandedState[identifier] = defaultCollapsed ? false : true;
             }
         } else {
             treeItem.collapsibleState = vscode.TreeItemCollapsibleState.None;
-            // console.log(`[getTreeItem] No children for ${this._filePath}::${element.label || element.title}`);
         }
     
         treeItem.command = element.command;
@@ -72,53 +44,46 @@ class OrcaOutlineProvider {
     
 
     getChildren(element) {
-        let children;
         if (element) {
             // If we have an element, return its children
-            children = element.children.map(child => {
-                return this.createChildItem(child);
+            return element.children.map(child => {
+                return {
+                    label: `${child.title} (Line ${child.line + 1})`,
+                    children: child.children,  // This will hold any further nested children
+                    command: {
+                        command: 'vscode.open',
+                        arguments: [vscode.Uri.file(this._filePath), {
+                            selection: new vscode.Range(child.line, 0, child.line, 0)
+                        }],
+                        title: 'Open File'
+                    },
+                    tooltip: `${child.title} (Line ${child.line + 1})`
+                };
             });
         } else {
             // If there's no element, return the top-level matches
-            children = this._matches.map(match => this.createChildItem(match));
+            //console.log(typeof this._matches, this._matches);
+            return this._matches.map(match => {
+                return {
+                    label: `${match.title} (Line ${match.line + 1})`,
+                    children: match.children,  // This will hold the first level of children
+                    command: {
+                        command: 'vscode.open',
+                        arguments: [vscode.Uri.file(this._filePath), {
+                            selection: new vscode.Range(match.line, 0, match.line, 0)
+                        }],
+                        title: 'Open File'
+                    },
+                    tooltip: `${match.title} (Line ${match.line + 1})`
+                };
+            });
         }
-    
-        // // Log the identifiers for debugging
-        // children.forEach(child => {
-        //     console.log(`Identifier for ${child.label}: ${child.identifier} (Expanded: ${this._expandedState[child.identifier]})`);
-        // });
-    
-        return children;
+        
     }
     
-    createChildItem(match) {
-        const identifier = `${this._filePath}::${match.title} (Line ${match.line + 1})`;
-        return {
-            label: `${match.title} (Line ${match.line + 1})`,
-            children: match.children, // This will hold any nested children
-            command: {
-                command: 'vscode.open',
-                arguments: [vscode.Uri.file(this._filePath), {
-                    selection: new vscode.Range(match.line, 0, match.line, 0)
-                }],
-                title: 'Open File'
-            },
-            tooltip: `${match.title} (Line ${match.line + 1})`,
-            identifier: identifier
-        };
-    }
-    
-    
-    // setExpandedState(element, isExpanded) {
-    //     this._expandedState[element.label || element.title] = isExpanded;
-    // }
-
     setExpandedState(element, isExpanded) {
-        const identifier = `${this._filePath}::${element.label || element.title}`;
-        this._expandedState[identifier] = isExpanded;
-        // console.log(`[setExpandedState] Expanded state for ${identifier} updated: ${isExpanded}`);
+        this._expandedState[element.label || element.title] = isExpanded;
     }
-    
 
     // Only a getter for onDidChangeTreeData
     get onDidChangeTreeData() {
@@ -133,7 +98,6 @@ class OrcaOutlineProvider {
     }
     // Method to refresh the tree view
     refresh() {
-        // show the current expanded states for debugging
         this._onDidChangeTreeData.fire(undefined);
     }
 
@@ -141,26 +105,6 @@ class OrcaOutlineProvider {
     getParsedMatches() {
         return this._matches;
     }
-    // async updateExpandedStatesForCurrentDocument(filePath) {
-    //     this._currentDocumentIdentifier = filePath;
-    
-    //     // Check if expanded states for the current document already exist
-    //     if (!this._expandedState[this._currentDocumentIdentifier]) {
-    //         // Initialize the expanded state for the current document
-    //         this._expandedState[this._currentDocumentIdentifier] = {};
-    
-    //         // Set default states for each match (collapsed or expanded based on your preference)
-    //         this._matches.forEach(match => {
-    //             const identifier = `${filePath}::${match.title} (Line ${match.line + 1})`;
-    //             // Set the default state here (true for expanded, false for collapsed)
-    //             this._expandedState[this._currentDocumentIdentifier][identifier] = false;
-    //         });
-    //     }
-    
-    //     console.log(`[updateExpandedStatesForCurrentDocument] Expanded state for ${this._currentDocumentIdentifier} updated: ${JSON.stringify(this._expandedState[this._currentDocumentIdentifier])}`);
-    //     // Trigger a refresh of the tree view to reflect the current document's expanded states
-    //     this.refresh();
-    // }
 }
 
 
@@ -405,35 +349,21 @@ function activate(context) {
     // Register the global instance
     vscode.window.registerTreeDataProvider('orcaFileOutline', orcaOutlineProvider);
     // Listen to changes in the active editor
-    context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(async editor => {
+    context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(editor => {
         if (editor && editor.document.languageId === 'orcaOut' && editor.document.fileName.endsWith('.out')) {
-            await showOrcaOutline();
-            // orcaOutlineProvider.updateExpandedStatesForCurrentDocument(editor.document.uri.fsPath);
-
-            // print the expanded states for debugging
-            // console.log(`[onDidChangeActiveTextEditor] Expanded states for ${editor.document.uri.fsPath}: ${JSON.stringify(orcaOutlineProvider._expandedState)}`);
-            orcaOutlineProvider.refresh();
+            showOrcaOutline();
         }
     }));
-    
-    // Automatically show outline if a .out file is already open using await
+    // Automatically show outline if a .out file is already open
     const activeEditor = vscode.window.activeTextEditor;
     if (activeEditor && activeEditor.document.languageId === 'orcaOut' && activeEditor.document.fileName.endsWith('.out')) {
         showOrcaOutline();
-        orcaOutlineProvider.refresh();
     }
 
-    // const activeEditor = vscode.window.activeTextEditor;
-    // if (activeEditor && activeEditor.document.languageId === 'orcaOut' && activeEditor.document.fileName.endsWith('.out')) {
-    //     showOrcaOutline();
-    //     orcaOutlineProvider.refresh();
-    // }
-
     // Automatically show outline if a .out file is opened
-    vscode.workspace.onDidOpenTextDocument(async document => {
+    vscode.workspace.onDidOpenTextDocument(document => {
         if (document.languageId === 'orcaOut' && document.fileName.endsWith('.out') && !vscode.window.activeTextEditor) {
-            await showOrcaOutline();
-            orcaOutlineProvider.refresh();
+            showOrcaOutline();
         }
     });
 
