@@ -63,6 +63,7 @@ For detailed release notes, please see [CHANGELOG.md](CHANGELOG.md).
 - [x] Syntax highliting for the ORCA output file based on the TOC entries.
 - [ ] Add settings for enabling/disabling the syntax highlighting for the ORCA output file.
 - [ ] Add command for unfold/fold all TOC entries
+- [ ] Add option to choose different highlight symbols for the TOC entries
 
 ## Roadmap
 

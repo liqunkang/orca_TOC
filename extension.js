@@ -1,9 +1,12 @@
+// Description: This file contains the main extension code for the ORCA Table of Contents extension.
+
 const vscode = require('vscode');
 const fs = require('fs');
 const path = require('path');
 
 // Synchronously read orcaPatterns.json
 const orcaPatterns = JSON.parse(fs.readFileSync(path.join(__dirname, 'patterns.json'), 'utf8'));
+// Synchronously read keywords.json
 const keywordReplacements = JSON.parse(fs.readFileSync(path.join(__dirname, 'keywords.json'), 'utf8'));
 
 // Adjust regex patterns to RegExp objects
@@ -11,63 +14,69 @@ orcaPatterns.forEach(pattern => {
     pattern.regex = new RegExp(pattern.regex, 'gm');
 });
 
+// Read the default collapsed state from the configuration
 const defaultCollapsed = vscode.workspace.getConfiguration().get('orcatoc.defaultCollapsed', true);
+
+// Define the outline provider class
 class OrcaOutlineProvider {
+    // The constructor takes an array of matches
     constructor(matches) {
-        this._matches = matches;
-        // Initialize the EventEmitter
-        this._onDidChangeTreeData = new vscode.EventEmitter();
+        this._matches = matches; // Store the matches here as a property
+        this._onDidChangeTreeData = new vscode.EventEmitter(); // Create an event emitter
         this._filePath = ""; // Initialize the file path
         this._expandedState = {}; // Initialize the expanded state
     }
 
+    // Method to generate the tree item for a given element
     getTreeItem(element) {
+        // console.log('[getTreeItem] element: ', element);
+
+        // Create a new tree item
         const treeItem = new vscode.TreeItem(element.label || element.title);
-        // console.log('Tree item: ', treeItem.label);
-        // console.log('Element: ', element);
+
+        // console.log('[getTreeItem] treeItem: ', treeItem);
+
+        // Check if the element is highlighted and set the icon accordingly
         if (element.highlighted) {
-            // Apply highlighting style by adding a star symbol to the beginning of the label
-            // console.log('Highlighted: ', element);
+            // console.log('Highlighted: ', element)
+
+            // Apply highlighting style by adding a filled circle icon at the beginning of the label
             treeItem.iconPath = new vscode.ThemeIcon('circle-large-filled'); // Reference: https://code.visualstudio.com/api/references/icons-in-labels#icon-listing
-            // // set to bold font
-            // treeItem.label = `**${treeItem.label}**`;
         }
+        // console.log('treeItem.iconPath: ', treeItem.iconPath);
+        // console.log('element.children: ', element.children);
 
-  
-        // if (element.children && element.children.length > 0) {
-        //     if (element.highlighted) {
-        //         treeItem.collapsibleState = vscode.TreeItemCollapsibleState.Expanded;
-        //     } 
-        //     else {
-        //     treeItem.collapsibleState = element.collapsed ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.Expanded;
-        // }
-        // } else {
-        //     treeItem.collapsibleState = vscode.TreeItemCollapsibleState.None;
-        // }
-
+        // Check if the element has children and set the collapsible state accordingly based on the highlighted state, isExpanded state, or the default collapsed state
         if (element.children && element.children.length > 0) {
             // Check if an expanded state has been set, otherwise use the default, or set to expanded if highlighted
             const isExpanded = this._expandedState[element.label || element.title];
-            
+
             if (isExpanded !== undefined) {
+                // If there is an expanded state, use it, or set to expanded if highlighted
                 treeItem.collapsibleState = element.highlighted ? vscode.TreeItemCollapsibleState.Expanded : isExpanded ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.Collapsed
             } else {
+                // If there is no expanded state, use the default collapsed state, or set to expanded if highlighted
                 treeItem.collapsibleState = element.highlighted ? vscode.TreeItemCollapsibleState.Expanded : defaultCollapsed ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.Expanded;
             }
         } else {
+            // If there are no children, set the collapsible state to none
             treeItem.collapsibleState = element.highlighted ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.None;
         }
-        // debug for the treeItem.collapsibleState
+
         // console.log('treeItem.collapsibleState: ', treeItem.collapsibleState);
         // console.log('element.children: ', element.children);
+        
+        // Set the command and tooltip
         treeItem.command = element.command;
         treeItem.tooltip = element.tooltip;
-        // create a unique id for each treeItem using the file path and the label and the level and the collapsed state
+
+        // Create a unique id for each treeItem using the file path and the label and the level and the collapsed state
+        // by creating a unique id will force the tree view to refresh when the collapsed state changes
         treeItem.id = `${this._filePath}::${treeItem.label}::${element.level}::${treeItem.collapsibleState}::${element.highlighted}`;
         return treeItem;
     }
-    
 
+    // Method to generate the children for a given element
     getChildren(element) {
         if (element && element.children) {
             // If we have an element, return its children
@@ -109,9 +118,9 @@ class OrcaOutlineProvider {
                 };
             });
         }
-        
+
     }
-    
+
     setExpandedState(element, isExpanded) {
         this._expandedState[element.label || element.title] = isExpanded;
         element.collapsed = !isExpanded;
@@ -220,22 +229,6 @@ async function showOrcaOutline() {  // Make the function asynchronous
     if (!activeEditor || !activeEditor.document) {
         return;
     }
-    
-    // if there's no active editor, check if there's a file with .out extension in the workspace
-    // if (!activeEditor) {
-    //     // Check if there's a file with .out extension in the workspace
-    //     if (vscode.workspace.textDocuments.some(doc => doc.uri.scheme === 'file' && doc.fileName.endsWith('.out'))) {
-    //         vscode.window.showErrorMessage("The file might be too large to open! VS Code is unable to operate with files larger than 50MB in active editor. Please consider breaking the file into smaller chunks.");
-    //     } else {
-    //         // If there's no file with .out extension in the workspace, show an error message, and Open File button to open the Open File dialog
-    //         vscode.window.showErrorMessage("No active document found. Please open a file first.", "Open File").then((value) => {
-    //             if (value === "Open File") {
-    //                 vscode.commands.executeCommand("workbench.action.files.openFile");
-    //             }
-    //         });
-    //     }
-    //     return;
-    // }
 
     const document = activeEditor.document;
     try {
@@ -356,27 +349,105 @@ function insertDummyHeadings(allMatches) {
     return correctedMatches;
 }
 
+// Function to replace keywords in the matches based on the keywordReplacements object
 async function replaceKeywords(matches) {
+    // Iterate through the matches and replace the keywords
     for (let match of matches) {
+        // Iterate through the keyword replacements and replace the keyword if it is found in the title
         for (let keyword in keywordReplacements) {
+            // Check if the keyword is found in the title and replace it
             if (match.title.includes(keyword)) {
                 match.title = match.title.replace(keyword, keywordReplacements[keyword]).trim();
             }
         }
+        // Recursively replace the keywords for the children if they exist
         if (match.children) {
             await replaceKeywords(match.children);  // Recursive replacement for child nodes
         }
     }
 }
 
+// Function to convert a string to title case
 function toTitleCase(str) {
+    // Replace the underscores with spaces
     return str.replace(/\w\S*/g, function (txt) {
+        // Capitalize the first letter of each word
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     });
 }
 
-function deactivate() { }
+// Function to reset all highlighted entries back to false
+function resetAllHighlights(matches) {
+    // Iterate through the matches and reset the highlighted property
+    matches.forEach(match => {
+        match.highlighted = false;
+        // match.collapsed = defaultCollapsed; // Reset the collapsed state to the default
+        // Recursively reset the highlighted property for the children
+        if (match.children) {
+            resetAllHighlights(match.children);
+        }
+    });
+}
 
+function updateTOCHighlight(lineNumber) {
+    resetAllHighlights(orcaOutlineProvider.getParsedMatches()); // Reset previous highlights
+    let currentLevelMatches = orcaOutlineProvider.getParsedMatches();
+
+    while (currentLevelMatches.length > 0) {
+        let matchForLevel = findClosestMatchForLevel(currentLevelMatches, lineNumber);
+        if (matchForLevel) {
+            matchForLevel.highlighted = true;
+            matchForLevel.collapsed = false; // Expand the entry
+            currentLevelMatches = matchForLevel.children || [];
+        } else {
+            break; // Exit if no match is found at the current level
+        }
+    }
+    // orcaOutlineProvider.refresh(); // Refresh the TOC view
+}
+
+// Function to find the closest match for a given level based on the line number of the cursor
+function findClosestMatchForLevel(matches, lineNumber) {
+    // Iterate through the matches and find the closest match for the given line number
+    let closestMatch = null;
+    matches.forEach(match => {
+        // Check if the match is at or before the current line number and if it is the closest match
+        if (match.line <= lineNumber && (!closestMatch || match.line > closestMatch.line)) {
+            closestMatch = match;
+        }
+    });
+    // Return the closest match
+    return closestMatch;
+}
+
+// Function to show the outline for an external .out file if the user selects the command from the command palette
+// Used for the ORCA output files that are larger than 50MB when activeTextEditor is not available
+async function showOrcaOutlineExternal() {
+
+    // Prompt the user to select a .out file
+    const uris = await vscode.window.showOpenDialog({
+        canSelectFiles: true,
+        canSelectFolders: false,
+        canSelectMany: false,
+        filters: { 'ORCA Files': ['out'] },
+        openLabel: 'Select ORCA file to open...'
+    });
+
+    if (uris && uris.length > 0) {
+        // Change the scheme to 'orca' to trigger the custom file system provider
+        const orcaUri = uris[0].with({ scheme: 'orca' });
+
+        // Attempt to open the document using the custom file system provider
+        try {
+            const doc = await vscode.workspace.openTextDocument(orcaUri);
+            vscode.window.showTextDocument(doc, { preview: false });
+        } catch (error) {
+            vscode.window.showErrorMessage(`Failed to open ORCA file: ${error.message}`);
+        }
+    }
+}
+
+// Function to activate the extension
 function activate(context) {
     const orcaProvider = new OrcaFileSystemProvider();
     context.subscriptions.push(vscode.workspace.registerFileSystemProvider('orca', orcaProvider, { isReadonly: true }));
@@ -429,114 +500,10 @@ function activate(context) {
     }));
 }
 
-function resetAllHighlights(matches) {
-    matches.forEach(match => {
-        match.highlighted = false;
-        //match.collapsed = defaultCollapsed;
-        if (match.children) {
-            resetAllHighlights(match.children);
-        }
-    });
-}
+// Function to deactivate the extension
+function deactivate() {}
 
-function updateTOCHighlight(lineNumber) {
-    resetAllHighlights(orcaOutlineProvider.getParsedMatches()); // Reset previous highlights
-    let currentLevelMatches = orcaOutlineProvider.getParsedMatches();
-
-    while (currentLevelMatches.length > 0) {
-        let matchForLevel = findClosestMatchForLevel(currentLevelMatches, lineNumber);
-        if (matchForLevel) {
-            matchForLevel.highlighted = true;
-            matchForLevel.collapsed = false; // Expand the entry
-            currentLevelMatches = matchForLevel.children || [];
-        } else {
-            break; // Exit if no match is found at the current level
-        }
-    }
-
-    // orcaOutlineProvider.refresh(); // Refresh the TOC view
-}
-
-function findClosestMatchForLevel(matches, lineNumber) {
-    let closestMatch = null;
-    matches.forEach(match => {
-        if (match.line <= lineNumber && (!closestMatch || match.line > closestMatch.line)) {
-            closestMatch = match;
-        }
-    });
-    return closestMatch;
-}
-
-
-
-function findTOCEntryForLine(matches, lineNumber) {
-    let closestMatch = null;
-
-    for (let match of matches) {
-        // If the match is at or before the line number and closer than the current closest match
-        if (match.line <= lineNumber && (!closestMatch || match.line > closestMatch.line)) {
-            closestMatch = match;
-        }
-
-        // Check children recursively
-        if (match.children && match.children.length > 0) {
-            let childMatch = findTOCEntryForLine(match.children, lineNumber);
-            // If a child match is closer to the line number, use it instead
-            if (childMatch && (!closestMatch || childMatch.line > closestMatch.line)) {
-                closestMatch = childMatch;
-            }
-        }
-    }
-    // console.log('Closest match: ', closestMatch);
-    return closestMatch;
-}
-
-
-function highlightTOCEntry(entry) {
-    // Set a highlight state on the entry and its parents
-    setHighlightState(entry, true);
-    orcaOutlineProvider.refresh(); // Refresh the TOC view to reflect the changes
-}
-
-function setHighlightState(entry, highlight) {
-    entry.highlighted = highlight; // Assuming each entry has a 'highlighted' property
-    if (highlight) {
-        orcaOutlineProvider.setExpandedState(entry, true); // Expand the entry
-    }
-    // Repeat for parent entries
-    entry.collapsed = false;
-    if (entry.parent) {
-        setHighlightState(entry.parent, highlight);
-    }
-}
-
-
-
-async function showOrcaOutlineExternal(context, uri) {
-
-    // Prompt the user to select a .out file
-    const uris = await vscode.window.showOpenDialog({
-        canSelectFiles: true,
-        canSelectFolders: false,
-        canSelectMany: false,
-        filters: { 'ORCA Files': ['out'] },
-        openLabel: 'Select ORCA file to open...'
-    });
-
-    if (uris && uris.length > 0) {
-        // Change the scheme to 'orca' to trigger the custom file system provider
-        const orcaUri = uris[0].with({ scheme: 'orca' });
-
-        // Attempt to open the document using the custom file system provider
-        try {
-            const doc = await vscode.workspace.openTextDocument(orcaUri);
-            vscode.window.showTextDocument(doc, { preview: false });
-        } catch (error) {
-            vscode.window.showErrorMessage(`Failed to open ORCA file: ${error.message}`);
-        }
-    }
-}
-
+// Export the activate and deactivate functions
 module.exports = {
     activate,
     deactivate
