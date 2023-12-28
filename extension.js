@@ -11,6 +11,7 @@ orcaPatterns.forEach(pattern => {
     pattern.regex = new RegExp(pattern.regex, 'gm');
 });
 
+const defaultCollapsed = vscode.workspace.getConfiguration().get('orcatoc.defaultCollapsed', true);
 class OrcaOutlineProvider {
     constructor(matches) {
         this._matches = matches;
@@ -22,29 +23,53 @@ class OrcaOutlineProvider {
 
     getTreeItem(element) {
         const treeItem = new vscode.TreeItem(element.label || element.title);
-    
+        // console.log('Tree item: ', treeItem.label);
+        // console.log('Element: ', element);
+        if (element.highlighted) {
+            // Apply highlighting style by adding a star symbol to the beginning of the label
+            // console.log('Highlighted: ', element);
+            treeItem.iconPath = new vscode.ThemeIcon('circle-large-filled'); // Reference: https://code.visualstudio.com/api/references/icons-in-labels#icon-listing
+            // // set to bold font
+            // treeItem.label = `**${treeItem.label}**`;
+        }
+
+  
+        // if (element.children && element.children.length > 0) {
+        //     if (element.highlighted) {
+        //         treeItem.collapsibleState = vscode.TreeItemCollapsibleState.Expanded;
+        //     } 
+        //     else {
+        //     treeItem.collapsibleState = element.collapsed ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.Expanded;
+        // }
+        // } else {
+        //     treeItem.collapsibleState = vscode.TreeItemCollapsibleState.None;
+        // }
+
         if (element.children && element.children.length > 0) {
-            const defaultCollapsed = vscode.workspace.getConfiguration().get('orcatoc.defaultCollapsed', true);
-    
-            // Check if an expanded state has been set, otherwise use the default
+            // Check if an expanded state has been set, otherwise use the default, or set to expanded if highlighted
             const isExpanded = this._expandedState[element.label || element.title];
+            
             if (isExpanded !== undefined) {
-                treeItem.collapsibleState = isExpanded ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.Collapsed;
+                treeItem.collapsibleState = element.highlighted ? vscode.TreeItemCollapsibleState.Expanded : isExpanded ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.Collapsed
             } else {
-                treeItem.collapsibleState = defaultCollapsed ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.Expanded;
+                treeItem.collapsibleState = element.highlighted ? vscode.TreeItemCollapsibleState.Expanded : defaultCollapsed ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.Expanded;
             }
         } else {
-            treeItem.collapsibleState = vscode.TreeItemCollapsibleState.None;
+            treeItem.collapsibleState = element.highlighted ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.None;
         }
-    
+        // debug for the treeItem.collapsibleState
+        // console.log('treeItem.collapsibleState: ', treeItem.collapsibleState);
+        // console.log('element.children: ', element.children);
         treeItem.command = element.command;
         treeItem.tooltip = element.tooltip;
+        // create a unique id for each treeItem using the file path and the label and the level and the collapsed state
+        treeItem.id = `${this._filePath}::${treeItem.label}::${element.level}::${treeItem.collapsibleState}::${element.highlighted}`;
         return treeItem;
     }
     
 
     getChildren(element) {
-        if (element) {
+        if (element && element.children) {
             // If we have an element, return its children
             return element.children.map(child => {
                 return {
@@ -57,7 +82,10 @@ class OrcaOutlineProvider {
                         }],
                         title: 'Open File'
                     },
-                    tooltip: `${child.title} (Line ${child.line + 1})`
+                    tooltip: `${child.title} (Line ${child.line + 1})`,
+                    highlighted: child.highlighted,
+                    collapsed: child.collapsed,
+                    level: child.level
                 };
             });
         } else {
@@ -74,7 +102,10 @@ class OrcaOutlineProvider {
                         }],
                         title: 'Open File'
                     },
-                    tooltip: `${match.title} (Line ${match.line + 1})`
+                    tooltip: `${match.title} (Line ${match.line + 1})`,
+                    highlighted: match.highlighted,
+                    collapsed: match.collapsed,
+                    level: match.level
                 };
             });
         }
@@ -83,6 +114,7 @@ class OrcaOutlineProvider {
     
     setExpandedState(element, isExpanded) {
         this._expandedState[element.label || element.title] = isExpanded;
+        element.collapsed = !isExpanded;
     }
 
     // Only a getter for onDidChangeTreeData
@@ -265,7 +297,9 @@ function parseOrcaFile(document, filePath) {
                             }],
                             title: 'Open File'
                         },
-                        tooltip: `${pattern.title} (Line ${line + 1})`
+                        tooltip: `${pattern.title} (Line ${line + 1})`,
+                        highlighted: false,
+                        collapsed: defaultCollapsed
                     });
                 }
 
@@ -308,7 +342,9 @@ function insertDummyHeadings(allMatches) {
                     level: lastMatch.level + j,
                     children: [],
                     command: null,
-                    tooltip: `Dummy for missing level`
+                    tooltip: `Dummy for missing level`,
+                    highlighted: false,
+                    collapsed: defaultCollapsed
                 });
             }
         }
@@ -383,7 +419,98 @@ function activate(context) {
             orcaOutlineProvider.refresh();
         }
     }));
+
+    // Highlight the TOC entry corresponding to the current cursor position
+    context.subscriptions.push(vscode.window.onDidChangeTextEditorSelection(event => {
+        if (event.textEditor.document.languageId === 'orcaOut' && event.textEditor.document.fileName.endsWith('.out')) {
+            updateTOCHighlight(event.selections[0].start.line);
+            orcaOutlineProvider.refresh(); // Refresh the TOC view
+        }
+    }));
 }
+
+function resetAllHighlights(matches) {
+    matches.forEach(match => {
+        match.highlighted = false;
+        //match.collapsed = defaultCollapsed;
+        if (match.children) {
+            resetAllHighlights(match.children);
+        }
+    });
+}
+
+function updateTOCHighlight(lineNumber) {
+    resetAllHighlights(orcaOutlineProvider.getParsedMatches()); // Reset previous highlights
+    let currentLevelMatches = orcaOutlineProvider.getParsedMatches();
+
+    while (currentLevelMatches.length > 0) {
+        let matchForLevel = findClosestMatchForLevel(currentLevelMatches, lineNumber);
+        if (matchForLevel) {
+            matchForLevel.highlighted = true;
+            matchForLevel.collapsed = false; // Expand the entry
+            currentLevelMatches = matchForLevel.children || [];
+        } else {
+            break; // Exit if no match is found at the current level
+        }
+    }
+
+    // orcaOutlineProvider.refresh(); // Refresh the TOC view
+}
+
+function findClosestMatchForLevel(matches, lineNumber) {
+    let closestMatch = null;
+    matches.forEach(match => {
+        if (match.line <= lineNumber && (!closestMatch || match.line > closestMatch.line)) {
+            closestMatch = match;
+        }
+    });
+    return closestMatch;
+}
+
+
+
+function findTOCEntryForLine(matches, lineNumber) {
+    let closestMatch = null;
+
+    for (let match of matches) {
+        // If the match is at or before the line number and closer than the current closest match
+        if (match.line <= lineNumber && (!closestMatch || match.line > closestMatch.line)) {
+            closestMatch = match;
+        }
+
+        // Check children recursively
+        if (match.children && match.children.length > 0) {
+            let childMatch = findTOCEntryForLine(match.children, lineNumber);
+            // If a child match is closer to the line number, use it instead
+            if (childMatch && (!closestMatch || childMatch.line > closestMatch.line)) {
+                closestMatch = childMatch;
+            }
+        }
+    }
+    // console.log('Closest match: ', closestMatch);
+    return closestMatch;
+}
+
+
+function highlightTOCEntry(entry) {
+    // Set a highlight state on the entry and its parents
+    setHighlightState(entry, true);
+    orcaOutlineProvider.refresh(); // Refresh the TOC view to reflect the changes
+}
+
+function setHighlightState(entry, highlight) {
+    entry.highlighted = highlight; // Assuming each entry has a 'highlighted' property
+    if (highlight) {
+        orcaOutlineProvider.setExpandedState(entry, true); // Expand the entry
+    }
+    // Repeat for parent entries
+    entry.collapsed = false;
+    if (entry.parent) {
+        setHighlightState(entry.parent, highlight);
+    }
+}
+
+
 
 async function showOrcaOutlineExternal(context, uri) {
 

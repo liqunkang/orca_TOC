@@ -10,7 +10,6 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:extension.showOrcaOutline",
     "onLanguage:orcaOut"
   ],
   "main": "./extension.js",
@@ -23,10 +22,6 @@
       {
         "command": "extension.showOrcaOutlineExternal",
         "title": "Show ORCA Outline External"
-      },
-      {
-        "command": "extension.foldUnfoldAll",
-        "title": "Fold/Unfold ORCA Outline Entries"
       }
     ],
     "views": {
