@@ -2,7 +2,7 @@
   "name": "orcatoc",
   "displayName": "orca_toc",
   "description": "Provides an outline for ORCA files in the VS Code sidebar.",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "engines": {
     "vscode": "^1.82.0"
   },
@@ -46,20 +46,60 @@
       }
     ],
     "configuration": {
-      "title": "Your Extension Configuration",
+      "title": "ORCA Table of Contents",
       "properties": {
         "orcatoc.defaultCollapsed": {
           "type": "boolean",
           "default": true,
-          "description": "Control whether the outline is collapsed by default."
+          "description": "Control whether the ORCA outline is collapsed by default."
+        },
+        "orcatoc.highlightSymbol": {
+          "type": "string",
+          "default": "circle-large-filled",
+          "enum": [
+            "activate-breakpoints",
+            "arrow-right",
+            "bookmark",
+            "check",
+            "circle-filled",
+            "circle-large-filled",
+            "circle-outline",
+            "circle-large-outline",
+            "ellipsis",
+            "eye",
+            "heart",
+            "lightbulb",
+            "link",
+            "more",
+            "pass",
+            "pass-filled",
+            "play",
+            "primitive-dot",
+            "primitive-square",
+            "search",
+            "smiley",
+            "sparkle",
+            "squirrel",
+            "star",
+            "star-empty",
+            "star-full",
+            "star-half",
+            "snake",
+            "tag",
+            "target",
+            "zap"
+          ],
+          "description": "Symbol used for highlighting TOC entries."
         }
       }
     },
-    "grammars": [{
-      "language": "orcaOut",
-      "scopeName": "source.orcaOut",
-      "path": "./syntaxes/orca.tmLanguage.json"
-    }]
+    "grammars": [
+      {
+        "language": "orcaOut",
+        "scopeName": "source.orcaOut",
+        "path": "./syntaxes/orca.tmLanguage.json"
+      }
+    ]
   },
   "scripts": {
     "lint": "eslint .",

@@ -40,9 +40,14 @@ class OrcaOutlineProvider {
         if (element.highlighted) {
             // console.log('Highlighted: ', element)
 
-            // Apply highlighting style by adding a filled circle icon at the beginning of the label
-            treeItem.iconPath = new vscode.ThemeIcon('circle-large-filled'); // Reference: https://code.visualstudio.com/api/references/icons-in-labels#icon-listing
+            // Apply highlighting style by adding a symbol to the label
+            // The highlightSymbol setting can be configured. The default is 'circle-large-filled'
+            // Reference: https://code.visualstudio.com/api/references/icons-in-labels#icon-listing
+            const highlightSymbol = vscode.workspace.getConfiguration().get('orcatoc.highlightSymbol', 'circle-large-filled');
+            // Set the icon path to the highlight symbol
+            treeItem.iconPath = new vscode.ThemeIcon(highlightSymbol);
         }
+
         // console.log('treeItem.iconPath: ', treeItem.iconPath);
         // console.log('element.children: ', element.children);
 
@@ -60,7 +65,7 @@ class OrcaOutlineProvider {
             }
         } else {
             // If there are no children, set the collapsible state to none
-            treeItem.collapsibleState = element.highlighted ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.None;
+            treeItem.collapsibleState =  vscode.TreeItemCollapsibleState.None;
         }
 
         // console.log('treeItem.collapsibleState: ', treeItem.collapsibleState);
@@ -82,7 +87,7 @@ class OrcaOutlineProvider {
             // If we have an element, return its children
             return element.children.map(child => {
                 return {
-                    label: `${child.title} (Line ${child.line + 1})`,
+                    label: `${child.title} (Line ${child.line + 1})`, // This will be the label for the tree item
                     children: child.children,  // This will hold any further nested children
                     command: {
                         command: 'vscode.open',
@@ -91,10 +96,10 @@ class OrcaOutlineProvider {
                         }],
                         title: 'Open File'
                     },
-                    tooltip: `${child.title} (Line ${child.line + 1})`,
-                    highlighted: child.highlighted,
-                    collapsed: child.collapsed,
-                    level: child.level
+                    tooltip: `${child.title} (Line ${child.line + 1})`, // This will be the tooltip for the tree item
+                    highlighted: child.highlighted, // This will be the highlighted state for the tree item
+                    collapsed: child.collapsed, // This will be the collapsed state for the tree item
+                    level: child.level // This will be the level for the tree item
                 };
             });
         } else {
@@ -102,7 +107,7 @@ class OrcaOutlineProvider {
             //console.log(typeof this._matches, this._matches);
             return this._matches.map(match => {
                 return {
-                    label: `${match.title} (Line ${match.line + 1})`,
+                    label: `${match.title} (Line ${match.line + 1})`, // This will be the label for the tree item
                     children: match.children,  // This will hold the first level of children
                     command: {
                         command: 'vscode.open',
@@ -111,32 +116,33 @@ class OrcaOutlineProvider {
                         }],
                         title: 'Open File'
                     },
-                    tooltip: `${match.title} (Line ${match.line + 1})`,
-                    highlighted: match.highlighted,
-                    collapsed: match.collapsed,
-                    level: match.level
+                    tooltip: `${match.title} (Line ${match.line + 1})`, // This will be the tooltip for the tree item
+                    highlighted: match.highlighted, // This will be the highlighted state for the tree item
+                    collapsed: match.collapsed, // This will be the collapsed state for the tree item
+                    level: match.level // This will be the level for the tree item
                 };
             });
         }
 
     }
 
+    // Method to set the expanded state for a given element
     setExpandedState(element, isExpanded) {
+        // Save the expanded state for the element in the expanded state object
         this._expandedState[element.label || element.title] = isExpanded;
+
+        // Set the collapsed state for the element
         element.collapsed = !isExpanded;
     }
 
-    // Only a getter for onDidChangeTreeData
-    get onDidChangeTreeData() {
-        return this._onDidChangeTreeData.event;
-    }
-
+    // Method to update the matches
     update(matches, filePath) {
         this._matches = matches;
         this._filePath = filePath; // Store the file path here
         // this._onDidChangeTreeData.fire(); // Trigger the event emitter
         this.refresh(); // Refresh the tree view
     }
+
     // Method to refresh the tree view
     refresh() {
         this._onDidChangeTreeData.fire(undefined);
@@ -146,23 +152,32 @@ class OrcaOutlineProvider {
     getParsedMatches() {
         return this._matches;
     }
+
+    // Only a getter for onDidChangeTreeData
+    get onDidChangeTreeData() {
+        // Return the event emitter
+        return this._onDidChangeTreeData.event;
+    }
 }
 
-
+// Define the custom file system provider class for the .out files
 class OrcaFileSystemProvider {
+
     constructor() {
         this._emitter = new vscode.EventEmitter();
         this.onDidChangeFile = this._emitter.event;
     }
+
+    // Method to read a file from the file system
     async readFile(uri) {
         try {
-            const fsPath = uri.fsPath;
+            const fsPath = uri.fsPath; // Get the file system path
             const fileStream = fs.createReadStream(fsPath, { encoding: 'utf8', highWaterMark: 1024 * 1024 });  // 1MB chunks
-            let buffer = '';
+            let buffer = ''; // Initialize the buffer
             for await (const chunk of fileStream) {
-                buffer += chunk;
+                buffer += chunk; // Append the chunk to the buffer
                 // Skip lines as per your requirement
-                buffer = buffer.replace(/^(\ {0,3}\d+.*\n)/gm, '\n');
+                buffer = buffer.replace(/^(\ {0,3}\d+.*\n)/gm, '\n'); // Remove line numbers
                 // Process buffer with regex here...
             }
             return Buffer.from(buffer);
@@ -171,6 +186,8 @@ class OrcaFileSystemProvider {
             throw new Error(`Failed to read file: ${error.message}`);
         }
     }
+
+    // Method to watch a file for changes
     watch(uri, options) {
         const watcher = fs.watch(uri.fsPath, (event, filename) => {
             if (event === 'change') {
@@ -180,6 +197,8 @@ class OrcaFileSystemProvider {
 
         return { dispose: () => watcher.close() };
     }
+
+    // Method to check if a file exists
     stat(uri) {
         try {
             const stats = fs.statSync(uri.fsPath);
@@ -221,15 +240,17 @@ class OrcaFileSystemProvider {
     }
 }
 
-
+// Create a global instance of the outline provider
 let orcaOutlineProvider = new OrcaOutlineProvider([]);
 
+// Function to show the outline for the .out file that is currently open in the active editor
 async function showOrcaOutline() {  // Make the function asynchronous
-    const activeEditor = vscode.window.activeTextEditor;
+    const activeEditor = vscode.window.activeTextEditor; // Get the active editor
     if (!activeEditor || !activeEditor.document) {
         return;
     }
 
+    // Check if the active document is an ORCA file (.out)
     const document = activeEditor.document;
     try {
         if (document.languageId !== 'orcaOut' || !document.fileName.endsWith('.out')) {
@@ -239,7 +260,6 @@ async function showOrcaOutline() {  // Make the function asynchronous
         }
 
         // Maybe handle non-UTF-8 characters here, normalize or clean up the document text
-
         const matches = await parseOrcaFile(document, document.uri.fsPath);  // Wait for the promise to resolve
 
         // Apply keyword replacements to the matches
@@ -257,32 +277,38 @@ async function showOrcaOutline() {  // Make the function asynchronous
     //orcaOutlineProvider.refresh();  // Refresh the tree view
 }
 
+// Function to parse the ORCA file and return the matches
 function parseOrcaFile(document, filePath) {
-    let matches = [];
-    let stack = [{ children: matches }];
+    let matches = []; // Initialize the matches array
+    let stack = [{ children: matches }]; // Initialize the stack with the matches array as the first element
 
+    // Parse the ORCA file and return the matches
     return vscode.window.withProgress({
+        // Show a progress bar while parsing the file
         location: vscode.ProgressLocation.Notification,
         title: "Parsing ORCA File",
         cancellable: true
     }, (progress, token) => {
         return new Promise((resolve, reject) => {
-            let buffer = document.getText();
-
-            let allMatches = [];
-            let totalPatterns = orcaPatterns.length;
+            let buffer = document.getText(); // Get the document text
+            let allMatches = []; // Initialize the allMatches array
+            let totalPatterns = orcaPatterns.length; // Get the total number of patterns
             orcaPatterns.forEach((pattern, index) => {
-                let match;
+                let match; // Initialize the match variable
                 while (match = pattern.regex.exec(buffer)) {
-                    const line = document.positionAt(match.index).line;
-                    let title = match[1] || pattern.title;
-                    title = toTitleCase(title.trim());
+                    // console.log('match: ', match);
+                    // console.log('match.index: ', match.index);
+                    const line = document.positionAt(match.index).line; // Get the line number
+                    let title = match[1] || pattern.title; // Get the title
+                    title = toTitleCase(title.trim()); // Convert the title to title case
+                    // console.log('title: ', title);
 
+                    // Add the match to the allMatches array
                     allMatches.push({
-                        line: line + 1,
-                        title: title,
-                        level: pattern.level,
-                        children: [],
+                        line: line + 1, // Add 1 to the line number to account for the 0-based index
+                        title: title, // Add the title
+                        level: pattern.level, // Add the level
+                        children: [], // Initialize the children array
                         command: {
                             command: 'vscode.open',
                             arguments: [vscode.Uri.file(filePath), {
@@ -290,45 +316,49 @@ function parseOrcaFile(document, filePath) {
                             }],
                             title: 'Open File'
                         },
-                        tooltip: `${pattern.title} (Line ${line + 1})`,
-                        highlighted: false,
-                        collapsed: defaultCollapsed
+                        tooltip: `${pattern.title} (Line ${line + 1})`, // This will be the tooltip for the tree item
+                        highlighted: false, // This will be the highlighted state for the tree item
+                        collapsed: defaultCollapsed // This will be the collapsed state for the tree item based on the default collapsed state configuration
                     });
                 }
 
+                // Report progress and check if the operation was cancelled
                 progress.report({ message: `Processing Pattern ${index + 1} of ${totalPatterns}`, increment: (100 / totalPatterns) });
-
                 if (token.isCancellationRequested) {
                     reject("Operation was cancelled by the user.");
                 }
             });
 
-            allMatches.sort((a, b) => a.line - b.line);
-            allMatches = insertDummyHeadings(allMatches);
+            allMatches.sort((a, b) => a.line - b.line); // Sort the matches by line number
+            allMatches = insertDummyHeadings(allMatches); // Insert dummy headings for missing levels
 
+            // console.log('allMatches: ', allMatches);
             allMatches.forEach(matchItem => {
+                // Pop the stack until the top of the stack is at the same level as the match
                 while (stack.length > matchItem.level) {
                     stack.pop();
                 }
-
+                // Add the match to the children of the top of the stack
                 stack[stack.length - 1].children.push(matchItem);
                 stack.push(matchItem);
             });
-
-            resolve(matches);
+            resolve(matches); // Resolve the promise with the matches
         });
     });
 }
 
+// Function to insert dummy headings for missing levels in the matches
 function insertDummyHeadings(allMatches) {
-    let correctedMatches = [];
-    let lastMatch = null;
+    let correctedMatches = []; // Initialize the corrected matches array
+    let lastMatch = null; // Initialize the last match variable
 
+    // Iterate through the matches and insert dummy headings for missing levels
     for (let i = 0; i < allMatches.length; i++) {
-        let currentLevel = allMatches[i].level;
-
+        let currentLevel = allMatches[i].level; // Get the current level
+        // Check if the last match exists and if the current level is more than 1 level higher than the last match
         if (lastMatch && currentLevel - lastMatch.level > 1) {
             for (let j = 1; j < currentLevel - lastMatch.level; j++) {
+                // Insert a dummy heading for the missing level
                 correctedMatches.push({
                     line: lastMatch.line,
                     title: lastMatch.title,
@@ -341,11 +371,9 @@ function insertDummyHeadings(allMatches) {
                 });
             }
         }
-
-        correctedMatches.push(allMatches[i]);
-        lastMatch = allMatches[i];
+        correctedMatches.push(allMatches[i]); // Push the current match to the corrected matches array
+        lastMatch = allMatches[i]; // Set the last match to the current match 
     }
-
     return correctedMatches;
 }
 
@@ -381,7 +409,7 @@ function resetAllHighlights(matches) {
     // Iterate through the matches and reset the highlighted property
     matches.forEach(match => {
         match.highlighted = false;
-        // match.collapsed = defaultCollapsed; // Reset the collapsed state to the default
+        match.collapsed = defaultCollapsed; // Reset the collapsed state to the default
         // Recursively reset the highlighted property for the children
         if (match.children) {
             resetAllHighlights(match.children);
@@ -389,16 +417,18 @@ function resetAllHighlights(matches) {
     });
 }
 
+// Function to update the TOC highlight based on the current cursor position
 function updateTOCHighlight(lineNumber) {
     resetAllHighlights(orcaOutlineProvider.getParsedMatches()); // Reset previous highlights
-    let currentLevelMatches = orcaOutlineProvider.getParsedMatches();
+    let currentLevelMatches = orcaOutlineProvider.getParsedMatches(); // Initialize the current level matches
 
+    // Iterate through the matches and find the closest match for the current line number
     while (currentLevelMatches.length > 0) {
-        let matchForLevel = findClosestMatchForLevel(currentLevelMatches, lineNumber);
+        let matchForLevel = findClosestMatchForLevel(currentLevelMatches, lineNumber); // Find the closest match for the current level
         if (matchForLevel) {
-            matchForLevel.highlighted = true;
+            matchForLevel.highlighted = true; // Highlight the entry
             matchForLevel.collapsed = false; // Expand the entry
-            currentLevelMatches = matchForLevel.children || [];
+            currentLevelMatches = matchForLevel.children || []; // Set the current level matches to the children of the match
         } else {
             break; // Exit if no match is found at the current level
         }
@@ -409,11 +439,11 @@ function updateTOCHighlight(lineNumber) {
 // Function to find the closest match for a given level based on the line number of the cursor
 function findClosestMatchForLevel(matches, lineNumber) {
     // Iterate through the matches and find the closest match for the given line number
-    let closestMatch = null;
+    let closestMatch = null; // Initialize the closest match
     matches.forEach(match => {
         // Check if the match is at or before the current line number and if it is the closest match
         if (match.line <= lineNumber && (!closestMatch || match.line > closestMatch.line)) {
-            closestMatch = match;
+            closestMatch = match; // Set the closest match
         }
     });
     // Return the closest match
@@ -422,7 +452,7 @@ function findClosestMatchForLevel(matches, lineNumber) {
 
 // Function to show the outline for an external .out file if the user selects the command from the command palette
 // Used for the ORCA output files that are larger than 50MB when activeTextEditor is not available
-async function showOrcaOutlineExternal() {
+async function showOrcaOutlineExternal(context, uri) {
 
     // Prompt the user to select a .out file
     const uris = await vscode.window.showOpenDialog({
@@ -449,13 +479,17 @@ async function showOrcaOutlineExternal() {
 
 // Function to activate the extension
 function activate(context) {
+    // Register the custom file system provider
     const orcaProvider = new OrcaFileSystemProvider();
+    // Register the custom file system provider for the 'orca' scheme
     context.subscriptions.push(vscode.workspace.registerFileSystemProvider('orca', orcaProvider, { isReadonly: true }));
+    // Register the command to show the outline
     context.subscriptions.push(vscode.commands.registerCommand('extension.showOrcaOutline', showOrcaOutline));
+    // Register the command to show the outline for an external .out file
     context.subscriptions.push(vscode.commands.registerCommand('extension.showOrcaOutlineExternal', (...args) => showOrcaOutlineExternal(context, ...args)));
     // Register the global instance
     vscode.window.registerTreeDataProvider('orcaFileOutline', orcaOutlineProvider);
-    // Listen to changes in the active editor
+    // Listen to changes in the active editor and automatically show outline if a .out file is opened
     context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(editor => {
         if (editor && editor.document.languageId === 'orcaOut' && editor.document.fileName.endsWith('.out')) {
             showOrcaOutline();
@@ -474,16 +508,6 @@ function activate(context) {
         }
     });
 
-    const treeView = vscode.window.createTreeView('orcaFileOutline', { treeDataProvider: orcaOutlineProvider });
-
-    treeView.onDidExpandElement(event => {
-        orcaOutlineProvider.setExpandedState(event.element, true);
-    });
-
-    treeView.onDidCollapseElement(event => {
-        orcaOutlineProvider.setExpandedState(event.element, false);
-    });
-
     // listen to changes in the configuration
     context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(e => {
         if (e.affectsConfiguration('orcatoc.defaultCollapsed')) {
@@ -498,6 +522,17 @@ function activate(context) {
             orcaOutlineProvider.refresh(); // Refresh the TOC view
         }
     }));
+
+    // Create the tree view for the outline
+    const treeView = vscode.window.createTreeView('orcaFileOutline', { treeDataProvider: orcaOutlineProvider });
+
+    // Listen to changes in the tree view when an element is expanded or collapsed
+    treeView.onDidExpandElement(event => {
+        orcaOutlineProvider.setExpandedState(event.element, true);
+    });
+    treeView.onDidCollapseElement(event => {
+        orcaOutlineProvider.setExpandedState(event.element, false);
+    });
 }
 
 // Function to deactivate the extension

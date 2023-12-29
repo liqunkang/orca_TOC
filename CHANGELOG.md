@@ -58,3 +58,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [0.3.1] - 2023-12-03
 
 - Added grammar syntax highlighting for the ORCA output file (syntax definition is saved in [`orca.tmLanguage.json`](syntaxes/orca.tmLanguage.json))
+
+## [0.4.0] - 2023-12-29
+
+- Added cursor position tracking for the ORCA output file. The TOC view will automatically highlight and expand the corresponding TOC entry when the user is navigating through the ORCA output file based on the current line number. The highlight and expand status of the TOC view will be updated when the user is moving the cursor to a different line in the ORCA output file.
+- Added support for changing the highlight symbols for the TOC entries.
+- Added support for saving the collapsed status of the TOC view in the settings of the extension. When navigating to different ORCA output files, the TOC view status for each file will be restored.
