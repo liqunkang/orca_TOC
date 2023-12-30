@@ -51,17 +51,29 @@ class OrcaOutlineProvider {
         // console.log('treeItem.iconPath: ', treeItem.iconPath);
         // console.log('element.children: ', element.children);
 
-        // Check if the element has children and set the collapsible state accordingly based on the highlighted state, isExpanded state, or the default collapsed state
-        if (element.children && element.children.length > 0) {
-            // Check if an expanded state has been set, otherwise use the default, or set to expanded if highlighted
-            const isExpanded = this._expandedState[element.label || element.title];
+        // Check the expanded state for the element saved in the global expanded state object
+        const isExpanded = this._expandedState[element.label || element.title]; // Get the expanded state from the expanded state object
 
-            if (isExpanded !== undefined) {
-                // If there is an expanded state, use it, or set to expanded if highlighted
-                treeItem.collapsibleState = element.highlighted ? vscode.TreeItemCollapsibleState.Expanded : isExpanded ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.Collapsed
+        // Check if the element has children and set the collapsible state accordingly
+        if (element.children && element.children.length > 0) {
+            if (element.highlighted) {
+                // If highlighted, set to expanded
+                treeItem.collapsibleState = vscode.TreeItemCollapsibleState.Expanded;
             } else {
-                // If there is no expanded state, use the default collapsed state, or set to expanded if highlighted
-                treeItem.collapsibleState = element.highlighted ? vscode.TreeItemCollapsibleState.Expanded : defaultCollapsed ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.Expanded;
+                if (element.collapsed !== undefined) {
+                    // If the collapsed state is set, use it
+                    treeItem.collapsibleState = element.collapsed ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.Expanded;
+                    this._expandedState[element.label || element.title] = !element.collapsed; // Save the expanded state in the expanded state object
+                } else {
+                    if (isExpanded !== undefined) {
+                        // If the expanded state is set, use it
+                        treeItem.collapsibleState = isExpanded ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.Collapsed;
+                    }
+                    else {
+                        // If neither the collapsed state nor the expanded state is set, use the default collapsed state
+                        treeItem.collapsibleState = defaultCollapsed ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.Expanded;
+                    }
+                }
             }
         } else {
             // If there are no children, set the collapsible state to none
@@ -77,7 +89,7 @@ class OrcaOutlineProvider {
 
         // Create a unique id for each treeItem using the file path and the label and the level and the collapsed state
         // by creating a unique id will force the tree view to refresh when the collapsed state changes
-        treeItem.id = `${this._filePath}::${treeItem.label}::${element.level}::${treeItem.collapsibleState}::${element.highlighted}`;
+        treeItem.id = `${this._filePath}::${treeItem.label}::${element.level}::${treeItem.collapsibleState}::${element.highlighted}::${element.collapsed}`;
         return treeItem;
     }
 
@@ -145,7 +157,7 @@ class OrcaOutlineProvider {
 
     // Method to refresh the tree view
     refresh() {
-        this._onDidChangeTreeData.fire(undefined);
+        this._onDidChangeTreeData.fire(undefined); // Trigger the event emitter
     }
 
     // share the matches
@@ -317,8 +329,8 @@ function parseOrcaFile(document, filePath) {
                             title: 'Open File'
                         },
                         tooltip: `${pattern.title} (Line ${line + 1})`, // This will be the tooltip for the tree item
-                        highlighted: false, // This will be the highlighted state for the tree item
-                        collapsed: defaultCollapsed // This will be the collapsed state for the tree item based on the default collapsed state configuration
+                        highlighted: false, // This will be the default highlighted state for the tree item
+                        collapsed: undefined // This will be the default collapsed state for the tree item
                     });
                 }
 
@@ -367,7 +379,7 @@ function insertDummyHeadings(allMatches) {
                     command: null,
                     tooltip: `Dummy for missing level`,
                     highlighted: false,
-                    collapsed: defaultCollapsed
+                    collapsed: undefined
                 });
             }
         }
@@ -409,7 +421,7 @@ function resetAllHighlights(matches) {
     // Iterate through the matches and reset the highlighted property
     matches.forEach(match => {
         match.highlighted = false;
-        match.collapsed = defaultCollapsed; // Reset the collapsed state to the default
+        // match.collapsed = undefined;
         // Recursively reset the highlighted property for the children
         if (match.children) {
             resetAllHighlights(match.children);
@@ -427,7 +439,7 @@ function updateTOCHighlight(lineNumber) {
         let matchForLevel = findClosestMatchForLevel(currentLevelMatches, lineNumber); // Find the closest match for the current level
         if (matchForLevel) {
             matchForLevel.highlighted = true; // Highlight the entry
-            matchForLevel.collapsed = false; // Expand the entry
+            // matchForLevel.collapsed = false; // Expand the entry
             currentLevelMatches = matchForLevel.children || []; // Set the current level matches to the children of the match
         } else {
             break; // Exit if no match is found at the current level
@@ -477,6 +489,27 @@ async function showOrcaOutlineExternal(context, uri) {
     }
 }
 
+// Function to reset all collapse states to a specific state
+function resetAllCollapseStates(matches, collapsedState) {
+    // console.log('resetAllCollapseStates');
+    matches.forEach(match => {
+        match.collapsed = collapsedState;
+        // Recursively reset the collapsed state for the children
+        if (match.children) {
+            resetAllCollapseStates(match.children, collapsedState);
+        }
+    });
+}
+
+let isAllCollapsed = defaultCollapsed; // Initialize the collapse/expand state of all TOC entries as a global variable
+
+// Function to toggle the collapse/expand state of all TOC entries
+function toggleCollapseExpandAll() {
+    isAllCollapsed = !isAllCollapsed; // Toggle the collapse/expand state
+    resetAllCollapseStates(orcaOutlineProvider.getParsedMatches(), isAllCollapsed); // Reset all collapse states
+    orcaOutlineProvider.refresh(); // Refresh the TOC view
+}
+
 // Function to activate the extension
 function activate(context) {
     // Register the custom file system provider
@@ -511,9 +544,14 @@ function activate(context) {
     // listen to changes in the configuration
     context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(e => {
         if (e.affectsConfiguration('orcatoc.defaultCollapsed')) {
-            orcaOutlineProvider.refresh();
+            console.log('orcatoc.defaultCollapsed changed');
+            resetAllCollapseStates(orcaOutlineProvider.getParsedMatches(), undefined); // Reset all collapse states to undefined
+            orcaOutlineProvider.refresh(); // Refresh the TOC view
         }
     }));
+
+    // Register the command to collapse/expand all TOC entries
+    context.subscriptions.push(vscode.commands.registerCommand('extension.toggleCollapseExpandAll', toggleCollapseExpandAll));
 
     // Highlight the TOC entry corresponding to the current cursor position
     context.subscriptions.push(vscode.window.onDidChangeTextEditorSelection(event => {

@@ -2,7 +2,7 @@
   "name": "orcatoc",
   "displayName": "orca_toc",
   "description": "Provides an outline for ORCA files in the VS Code sidebar.",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "engines": {
     "vscode": "^1.82.0"
   },
@@ -17,11 +17,15 @@
     "commands": [
       {
         "command": "extension.showOrcaOutline",
-        "title": "Show ORCA Outline"
+        "title": "orca_toc: Show ORCA Outline"
       },
       {
         "command": "extension.showOrcaOutlineExternal",
-        "title": "Show ORCA Outline External"
+        "title": "orca_toc: Show ORCA Outline External"
+      },
+      {
+        "command": "extension.toggleCollapseExpandAll",
+        "title": "orca_toc: Toggle Collapse/Expand All TOC Entries"
       }
     ],
     "views": {
@@ -46,7 +50,7 @@
       }
     ],
     "configuration": {
-      "title": "ORCA Table of Contents",
+      "title": "ORCA_TOC",
       "properties": {
         "orcatoc.defaultCollapsed": {
           "type": "boolean",

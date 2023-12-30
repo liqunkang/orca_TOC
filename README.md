@@ -19,11 +19,13 @@ By default all the parent entries are collapsed. While navigating through the OR
 
 The collapsed status of the TOC view could also be changed by clicking the toggle arrow next to each parent entry. The manually changed collapsed status of the TOC view for each ORCA output file will be preserved when navigating between different ORCA output files.
 
+Settings of this extension can be changed in the settings of VS Code (click on the gear icon in the bottom left corner of the VS Code window or press `Ctrl+,` on Windows or `Cmd+,` on Mac). The configuration options are listed under `Extensions` -> `ORCA_TOC`, or could be accessed by searching `ORCA_TOC` in the search bar of the settings window.
+
 ![Outline Example](images/outline_example.png)
 
 ![Outline Example Expanded](images/outline_example_expanded.png)
 
-The TOC view can also be triggered manually by running the command `Show ORCA Outline` from the command palette. On Windows, the command palette can be opened with `Ctrl+Shift+P`, on Mac it is `Cmd+Shift+P`. The TOC view is automatically updated when navigating to a different ORCA output file, or when an ORCA output file is opened.
+The TOC view can also be triggered manually by running the command `orca_toc: Show ORCA Outline` from the command palette. On Windows, the command palette can be opened with `Ctrl+Shift+P`, on Mac it is `Cmd+Shift+P`. The TOC view is automatically updated when navigating to a different ORCA output file, or when an ORCA output file is opened.
 
 ![Command Palette Example](images/command_palette_example.png)
 
@@ -48,7 +50,7 @@ For a list of available highlight symbols, please see [here](https://code.visual
 
 - If you have very large ORCA output files, please first consider splitting them into smaller chunks or remove the parts that are not needed (for example full print of the MOs).
 
-- :warning: For large ORCA output files, The current solution is using the `FileSystemProvider` API to read the contents of the ORCA output file directly from the file system. This will allow the extension to parse ORCA output files that are larger than 50MB.  please use the command `Show ORCA Outline External` from the command palette and load the large ORCA output file manually from your file system. The loaded ORCA output file will be displayed in a new tab in the editor of the current VS Code window, with a :lock: symbol at the end of the file name. This is because the file is read-only and cannot be modified. The TOC view will be automatically populated with the contents of this ORCA output file.
+- :warning: For large ORCA output files, The current solution is using the `FileSystemProvider` API to read the contents of the ORCA output file directly from the file system. This will allow the extension to parse ORCA output files that are larger than 50MB.  please use the command `orca_toc: Show ORCA Outline External` from the command palette and load the large ORCA output file manually from your file system. The loaded ORCA output file will be displayed in a new tab in the editor of the current VS Code window, with a :lock: symbol at the end of the file name. This is because the file is read-only and cannot be modified. The TOC view will be automatically populated with the contents of this ORCA output file.
 
 - :construction: A known issue is that clicking the heading titles in the `ORCA FILE OUTLINE` view for large ORCA output files will not navigate to the corresponding line in the opened tab. Instead a new tab with the same name file name will pop up, showing identical contents and TOC view at the respective line. This bug will be fixed in a future release.
 
@@ -60,11 +62,10 @@ For a list of available highlight symbols, please see [here](https://code.visual
 
 For detailed release notes, please see [CHANGELOG.md](CHANGELOG.md).
 
-### 0.4.0
+### 0.4.1
 
-- Added cursor position tracking for the ORCA output file. The TOC view will automatically highlight and expand the corresponding TOC entry when the user is navigating through the ORCA output file based on the current line number. The highlight and expand status of the TOC view will be updated when the user is moving the cursor to a different line in the ORCA output file.
-- Added support for changing the highlight symbols for the TOC entries.
-- Added support for saving the collapsed status of the TOC view in the settings of the extension. When navigating to different ORCA output files, the TOC view status for each file will be restored.
+- Added command `orca_toc: Toggle Collapse/Expand All TOC Entries` to toggle collapse/expand all TOC entries at once. The collapsed status of the TOC view will be preserved when navigating between different ORCA output files. The default collapsed status of the TOC view can be changed in the settings of the extension.
+- Update of the `patterns.json` file for better parsing of the ORCA output file.
 
 ## TODO
 
@@ -73,15 +74,12 @@ For detailed release notes, please see [CHANGELOG.md](CHANGELOG.md).
 - [x] Add support for the `ORCA FILE OUTLINE` view to automatically scroll to the current line in the ORCA output file.
 - [x] Syntax highliting for the ORCA output file based on the TOC entries.
 - [x] Add settings for enabling/disabling the syntax highlighting for the ORCA output file.
-- [ ] Add command for unfold/fold all TOC entries
+- [x] Add command for toggle collapse/expand the TOC view.
 - [x] Add option to choose different highlight symbols for the TOC entries
 - [ ] Update illustration figures in this README
-
-## Roadmap
-
-The current version represents an early release of this extension.
-
-An important feature that will be added in the next major release is to enable the scrolling of the `ORCA FILE OUTLINE` view to the current line in the ORCA output file. This will be useful when the ORCA output file is very long and the user is navigating through the file. The `ORCA FILE OUTLINE` view will automatically scroll to the current line in the ORCA output file.
+- [ ] Update the `orca.tmLanguage.json` file to include more syntax definitions for the ORCA output file
+- [ ] Update the `patterns.json` file to include more regular expressions for parsing the ORCA output file
+- [ ] Update the `keywords.json` file to include more keywords for replacing the matched text
 
 ## For Developers
 
