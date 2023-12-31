@@ -45,7 +45,7 @@
       },
       {
         "name": "keyword.control.orca",
-        "match": "\\b(done|true|false|yes|no|on|off|ON|OFF|YES|NO|NOT USED|NOT available|AVAILABLE|ok|auto)\\b"
+        "match": "\\b(done|true|false|yes|no|on|off|ON|OFF|YES|NO|NOT USED|NOT available|AVAILABLE|ok|auto|TOTAL)\\b"
       },
       {
         "name": "comment.block.orca",
@@ -75,6 +75,14 @@
       {
         "name": "keyword.other.orca",
         "match": "\\b(DKH|SCF|ORCA|UHF|GTO|CIS|DFT|TRAH|HOMO|LUMO|PBE|NewAuxJGTO|NewGTO|OCC|SOC|XES|XAS)\\b"
+      },
+      {
+        "name": "keyword.other.orca",
+        "match": "\\b(CASSCF|RHF|RIJCOSX|AUTO-CI|ROCIS|NMR|TD-DFT|QM/MM|Ab Initio|GIAO ZORA|MRCI|CSF-ICE|EOM-CC|C-PCM|KDIIS|OOCD|CCSD|QMMM|D3BJ)\\b"
+      },
+      {
+        "name": "keyword.other.orca",
+        "match": "\\b(SARC/J|Sapporo|DKH3|TZP|TZVP|def2|RI|ZFS|DKH2|DFTD3|LR-CPCM)\\b"
       },
       {
         "name": "storage.type.unit.orca",
