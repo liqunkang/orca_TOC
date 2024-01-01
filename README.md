@@ -15,21 +15,23 @@ This extension provides a separate toggleable TOC view in the sidebar. The TOC v
 
 The generated TOC view is a tree view with the titles of the headings in the ORCA output file and the corresponding line numbers. Clicking on a TOC entry will jump to the corresponding line in the ORCA output file.
 
-By default all the parent entries are collapsed. While navigating through the ORCA output file using the cursor, the TOC view will automatically highlight and expand the corresponding parent entries and highlight the corresponding child entry. Moving the cursor to a different line will automatically update the TOC view by highlighting and expanding the new parent entries and highlighting the new child entry, while collapsing the previous parent entries and removing the highlight from the previous child entry.
-
-The collapsed status of the TOC view could also be changed by clicking the toggle arrow next to each parent entry. The manually changed collapsed status of the TOC view for each ORCA output file will be preserved when navigating between different ORCA output files.
-
-Settings of this extension can be changed in the settings of VS Code (click on the gear icon in the bottom left corner of the VS Code window or press `Ctrl+,` on Windows or `Cmd+,` on Mac). The configuration options are listed under `Extensions` -> `ORCA_TOC`, or could be accessed by searching `ORCA_TOC` in the search bar of the settings window.
-
 ![Outline Example](images/outline_example.png)
 
-![Outline Example Expanded](images/outline_example_expanded.png)
+By default all the parent entries are collapsed. While navigating through the ORCA output file using the cursor, the TOC view will automatically highlight and expand the corresponding parent entries and highlight the corresponding child entry. Moving the cursor to a different line will automatically update the TOC view by highlighting and expanding the new parent entries and highlighting the new child entry, while collapsing the previous parent entries and removing the highlight from the previous child entry.
+
+![Cursor Tracking Example](images/cursor_tracking_example.png)
 
 The TOC view can also be triggered manually by running the command `orca_toc: Show ORCA Outline` from the command palette. On Windows, the command palette can be opened with `Ctrl+Shift+P`, on Mac it is `Cmd+Shift+P`. The TOC view is automatically updated when navigating to a different ORCA output file, or when an ORCA output file is opened.
 
 ![Command Palette Example](images/command_palette_example.png)
 
-This plugin also provides syntax highlighting for the ORCA output file, including the headings, separation lines, numbers, and keywords, etc. The display of the syntax highlighting varies with different themes. Dark themes are recommended for better display of the syntax highlighting. To temporarily disable the syntax highlighting, please use the command `Change Language Mode` from the command palette and select `Plain Text`. To switch back to the syntax highlighting, please use the command `Change Language Mode` from the command palette and select `Auto Detect` or `ORCA-output`.
+The collapsed status of the TOC view could also be changed by clicking the toggle arrow next to each parent entry. The manually changed collapsed status of the TOC view for each ORCA output file will be preserved when navigating between different ORCA output files. To toggle the collapsed status of all the parent entries, please use the command `orca_toc: Toggle Collapse/Expand All TOC Entries` from the command palette.
+
+![Toggle Collapse/Expand Example](images/toggle_collapse_expand_example.png)
+
+This plugin also provides syntax highlighting for the ORCA output file, including the headings, separation lines, numbers, and keywords, etc. The display of the syntax highlighting varies with different themes. Dark themes are recommended for better display of the syntax highlighting. To temporarily disable the syntax highlighting, please use the command `Change Language Mode` from the command palette and select `Plain Text`. To switch back to the syntax highlighting, please use the command `Change Language Mode` from the command palette and select `Auto Detect` or `ORCA-output`. Please note that the effect of the syntax highlighting is highly dependent on the theme that you are using. In all the screenshots in this README, the theme used is `One Dark Pro Darker` (See [here](https://marketplace.visualstudio.com/items?itemName=zhuangtongfa.Material-theme) for more details).
+
+![Syntax Highlighting Example](images/syntax_highlighting_example.png)
 
 ## Requirements
 
@@ -37,12 +39,14 @@ N/A
 
 ## Extension Settings
 
-The current version (0.4.0) enables changing the default status of the toggleable TOC view. The default collapsed status of the TOC view can be changed in the settings of the extension. The default value is `true`, which means that the TOC view is collapsed by default. The TOC view can be expanded by clicking the toggle arrow next to each parent entry.
+Settings of this extension can be changed in the settings of VS Code (click on the gear icon in the bottom left corner of the VS Code window or press `Ctrl+,` on Windows or `Cmd+,` on Mac). The configuration options are listed under `Extensions` -> `ORCA_TOC`, or could be accessed by searching `ORCA_TOC` in the search bar of the settings window.
 
-![Setting: Collapse TOC view by default](images/setting_collapse_status.png)
+The current version (0.4.2) enables changing the default status of the toggleable TOC view. The default collapsed status of the TOC view can be changed in the settings of the extension. The default value is `true`, which means that the TOC view is collapsed by default. The TOC view can be expanded by clicking the toggle arrow next to each parent entry.
 
-The current version (0.4.0) enables changing the highlight symbols for the TOC entries. The default highlight symbol is 'circle-large-filled'.
+The current version (0.4.2) enables changing the highlight symbols for the TOC entries. The default highlight symbol is 'circle-large-filled'.
 For a list of available highlight symbols, please see [here](https://code.visualstudio.com/api/references/icons-in-labels#icon-listing).
+
+![Settings Example](images/settings_example.png)
 
 ## Issues and Important Notes
 
@@ -62,10 +66,9 @@ For a list of available highlight symbols, please see [here](https://code.visual
 
 For detailed release notes, please see [CHANGELOG.md](CHANGELOG.md).
 
-### 0.4.1
+### 0.4.2
 
-- Added command `orca_toc: Toggle Collapse/Expand All TOC Entries` to toggle collapse/expand all TOC entries at once. The collapsed status of the TOC view will be preserved when navigating between different ORCA output files. The default collapsed status of the TOC view can be changed in the settings of the extension.
-- Update of the `patterns.json` file for better parsing of the ORCA output file.
+- update of illustration figures in this README
 
 ## TODO
 

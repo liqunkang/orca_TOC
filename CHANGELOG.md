@@ -69,3 +69,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - Added command `orca_toc: Toggle Collapse/Expand All TOC Entries` to toggle collapse/expand all TOC entries at once. The collapsed status of the TOC view will be preserved when navigating between different ORCA output files. The default collapsed status of the TOC view can be changed in the settings of the extension.
 - Update of the `patterns.json` file for better parsing of the ORCA output file.
+
+## [0.4.2] - 2024-01-01
+
+- Update of illustration figures in the README.
