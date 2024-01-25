@@ -41,9 +41,9 @@ N/A
 
 Settings of this extension can be changed in the settings of VS Code (click on the gear icon in the bottom left corner of the VS Code window or press `Ctrl+,` on Windows or `Cmd+,` on Mac). The configuration options are listed under `Extensions` -> `ORCA_TOC`, or could be accessed by searching `ORCA_TOC` in the search bar of the settings window.
 
-The current version (0.4.2) enables changing the default status of the toggleable TOC view. The default collapsed status of the TOC view can be changed in the settings of the extension. The default value is `true`, which means that the TOC view is collapsed by default. The TOC view can be expanded by clicking the toggle arrow next to each parent entry.
+The current version (0.4.3) enables changing the default status of the toggleable TOC view. The default collapsed status of the TOC view can be changed in the settings of the extension. The default value is `true`, which means that the TOC view is collapsed by default. The TOC view can be expanded by clicking the toggle arrow next to each parent entry.
 
-The current version (0.4.2) enables changing the highlight symbols for the TOC entries. The default highlight symbol is 'circle-large-filled'.
+The current version (0.4.3) enables changing the highlight symbols for the TOC entries. The default highlight symbol is 'circle-large-filled'.
 For a list of available highlight symbols, please see [here](https://code.visualstudio.com/api/references/icons-in-labels#icon-listing).
 
 ![Settings Example](images/settings_example.png)
@@ -66,9 +66,9 @@ For a list of available highlight symbols, please see [here](https://code.visual
 
 For detailed release notes, please see [CHANGELOG.md](CHANGELOG.md).
 
-### 0.4.2
+### 0.4.3
 
-- update of illustration figures in this README
+- update of `orca.tmLanguage.json` file for better syntax highlighting of the ORCA output file.
 
 ## TODO
 
@@ -80,7 +80,7 @@ For detailed release notes, please see [CHANGELOG.md](CHANGELOG.md).
 - [x] Add command for toggle collapse/expand the TOC view.
 - [x] Add option to choose different highlight symbols for the TOC entries
 - [ ] Update illustration figures in this README
-- [ ] Update the `orca.tmLanguage.json` file to include more syntax definitions for the ORCA output file
+- [x] Update the `orca.tmLanguage.json` file to include more syntax definitions for the ORCA output file
 - [ ] Update the `patterns.json` file to include more regular expressions for parsing the ORCA output file
 - [ ] Update the `keywords.json` file to include more keywords for replacing the matched text
 

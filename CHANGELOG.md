@@ -73,3 +73,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [0.4.2] - 2024-01-01
 
 - Update of illustration figures in the README.
+
+## [0.4.3] - 2024-01-25
+
+- update of `orca.tmLanguage.json` file for better syntax highlighting of the ORCA output file.

@@ -1,93 +1,353 @@
 {
-    "scopeName": "source.orcaOut",
-    "name": "ORCA-output",
-    "patterns": [
-      {
-        "name": "constant.numeric.orca",
-        "match": "\\b-?\\d+(\\.\\d+)?([eE][-+]?\\d+)?\\b"
-      },      
-      {
-        "name": "entity.name.heading.orca",
-        "begin": "^\\s+\\*{5,}\\w*\\*{5,}\\s*$",
-        "beginCaptures": {
-          "0": { "name": "markup.heading.orca" }
+  "scopeName": "source.orcaOut",
+  "name": "ORCA-output",
+  "patterns": [
+    {
+      "include": "#number"
+    },
+    {
+      "include": "#link"
+    },
+    {
+      "include": "#heading"
+    },
+    {
+      "include": "#quoted"
+    },
+    {
+      "include": "#separator"
+    },
+    {
+      "include": "#block"
+    },
+    {
+      "include": "#element"
+    },
+    {
+      "include": "#unit"
+    },
+    {
+      "include": "#boolean"
+    },
+    {
+      "include": "#status"
+    },
+    {
+      "include": "#symbol"
+    },
+    {
+      "include": "#setting"
+    },
+    {
+      "include": "#parameter"
+    },
+    {
+      "include": "#keyword"
+    },
+    {
+      "include": "#method"
+    },
+    {
+      "include": "#functioanl"
+    }
+  ],
+  "repository": {
+    "number": {
+      "patterns": [
+        {
+          "name": "constant.numeric.orca",
+          "match": "\\b-?\\d+(\\.\\d+)?([eE][-+]?\\d+)?\\b"
+        }
+      ]
+    },
+    "link": {
+      "patterns": [
+        {
+          "name": "string.link.orca",
+          "match": "https?://[\\w-]+(\\.[\\w-]+)+[/#]?.*"
         },
-        "end": "^\\s+\\*{10,}\\s*$",
-        "endCaptures": {
-          "0": { "name": "markup.heading.orca" }
+        {
+          "name": "string.unquoted.path.orca",
+          "match": "\\/[\\/\\w.-]+\\/[\\w.-]+(?:\\/[\\w.-]+)*"
         },
-        "patterns": [
-          {
-            "name": "markup.heading.orca",
-            "match": "^\\s+\\*.+\\*\\s*$"
-          }
-        ]
-      },
-      {
-        "name": "string.quoted.other.dashline.orca",
-        "match": "^\\s*\\-{5,}\\s*$"
-      },
-      {
-        "name": "string.quoted.other.equaline.orca",
-        "match": "^\\s*={5,}\\s*$"
-      },
-      {
-        "name": "entity.name.section.orca",
-        "match": "^\\s*[A-Z][A-Z -/():]+$"
-      },
-      {
-        "name": "constant.other.element.orca",
-        "match": "(?<=\\s)(\\d+)?(H|He|Li|Be|B|C|N|O|F|Ne|Na|Mg|Al|Si|P|S|Cl|Ar|K|Ca|Sc|Ti|V|Cr|Mn|Fe|Co|Ni|Cu|Zn|Ga|Ge|As|Se|Br|Kr|Rb|Sr|Y|Zr|Nb|Mo|Tc|Ru|Rh|Pd|Ag|Cd|In|Sn|Sb|Te|I|Xe|Cs|Ba|La|Ce|Pr|Nd|Pm|Sm|Eu|Gd|Tb|Dy|Ho|Er|Tm|Yb|Lu|Hf|Ta|W|Re|Os|Ir|Pt|Au|Hg|Tl|Pb|Bi|Po|At|Rn|Fr|Ra|Ac|Th|Pa|U|Np|Pu|Am|Cm|Bk|Cf|Es|Fm|Md|No|Lr)(?=\\s)"
-      },
-      {
-        "name": "storage.type.orbital.orca",
-        "match": "(?<=\\s)(\\d+)?(?:s {4}|px {3}|py {3}|pz {3}|dz2 {2}|dx2y2|dxy {2}|dxz {2}|dyz {2}|f0 {3}|f\\+1 {2}|f-1 {2}|f\\+2 {2}|f-2 {2}|f\\+3 {2}|f-3 {2})(?=\\s)"
-      },
-      {
-        "name": "keyword.control.orca",
-        "match": "\\b(done|true|false|yes|no|on|off|ON|OFF|YES|NO|NOT USED|NOT available|AVAILABLE|ok|auto|TOTAL)\\b"
-      },
-      {
-        "name": "comment.block.orca",
-        "match": "^\\s*\\*{3,}\\s*[^*]+\\s*\\*{3,}\\s*$"
-      },
-      {
-        "name": "string.quoted.orca",
-        "match": "^\\|\\s*\\d+>.*$"
-      },
-      {
-        "name": "storage.type.arrow.orca",
-        "match": "\\-+>|\\=+>"
-      },
-
-      {
-        "name": "variable.language.orca",
-        "match": "^.*?(?=\\.\\.\\.)"
-      },
-      {
-        "name": "variable.parameter.orca",
-        "match": "^.*?(?=\\:)"
-      },
-      {
-        "name": "variable.other.constant.orca",
-        "match": "^.*?(?=\\=)"
-      },
-      {
-        "name": "keyword.other.orca",
-        "match": "\\b(DKH|SCF|ORCA|UHF|GTO|CIS|DFT|TRAH|HOMO|LUMO|PBE|NewAuxJGTO|NewGTO|OCC|SOC|XES|XAS)\\b"
-      },
-      {
-        "name": "keyword.other.orca",
-        "match": "\\b(CASSCF|RHF|RIJCOSX|AUTO-CI|ROCIS|NMR|TD-DFT|QM/MM|Ab Initio|GIAO ZORA|MRCI|CSF-ICE|EOM-CC|C-PCM|KDIIS|OOCD|CCSD|QMMM|D3BJ)\\b"
-      },
-      {
-        "name": "keyword.other.orca",
-        "match": "\\b(SARC/J|Sapporo|DKH3|TZP|TZVP|def2|RI|ZFS|DKH2|DFTD3|LR-CPCM)\\b"
-      },
-      {
-        "name": "storage.type.unit.orca",
-        "match": "(?<=\\s|\\()((days|min|hours|sec|MB|%|eV|cm-1|Eh|Eh\\/bohr|bohr|minutes|seconds|msec|au|nm|cgs|electrons)(?=\\s|\\)))"
-      }
-    ]
+        {
+          "name": "string.unquoted.path.orca",
+          "match": "(?:[a-zA-Z]:)?(?:\\\\|\\.\\\\|..\\\\)[\\\\.\\w-]+(?:\\\\[\\\\.\\w-]+)*"
+        }
+      ]
+    },
+    "heading": {
+      "patterns": [
+        {
+          "name": "entity.name.heading.orca",
+          "begin": "^\\s+\\*{5,}\\w*\\*{5,}\\s*$",
+          "beginCaptures": {
+            "0": {
+              "name": "markup.heading.orca"
+            }
+          },
+          "end": "^\\s+\\*{10,}\\s*$",
+          "endCaptures": {
+            "0": {
+              "name": "markup.heading.orca"
+            }
+          },
+          "patterns": [
+            {
+              "name": "markup.heading.orca",
+              "match": "^\\s+\\*.+\\*\\s*$"
+            }
+          ]
+        }
+      ]
+    },
+    "quoted": {
+      "patterns": [
+        {
+          "name": "string.quoted.single",
+          "match": "(['‘])([^\\s'‘’#]+)(['’])"
+        },
+        {
+          "name": "string.quoted.orca",
+          "match": "^\\|\\s*\\d+>.*$"
+        }
+      ]
+    },
+    "separator": {
+      "patterns": [
+        {
+          "name": "string.quoted.other.dashline.orca",
+          "match": "^\\s*\\-{5,}\\s*$"
+        },
+        {
+          "name": "string.quoted.other.equaline.orca",
+          "match": "^\\s*={5,}\\s*$"
+        }
+      ]
+    },
+    "block": {
+      "patterns": [
+        {
+          "name": "comment.block.orca",
+          "match": "^\\s*\\*{3,}\\s*[^*]+\\s*\\*{3,}\\s*$"
+        },
+        {
+          "name": "comment.block.orca",
+          "match": "^\\s*\\-{3,}\\s*[^*]+\\s*\\-{3,}\\s*$"
+        }
+      ]
+    },
+    "element": {
+      "patterns": [
+        {
+          "name": "constant.other.element.orca",
+          "match": "(?<=\\s)(\\d+)?(H|He|Li|Be|B|C|N|O|F|Ne|Na|Mg|Al|Si|P|S|Cl|Ar|K|Ca|Sc|Ti|V|Cr|Mn|Fe|Co|Ni|Cu|Zn|Ga|Ge|As|Se|Br|Kr|Rb|Sr|Y|Zr|Nb|Mo|Tc|Ru|Rh|Pd|Ag|Cd|In|Sn|Sb|Te|I|Xe|Cs|Ba|La|Ce|Pr|Nd|Pm|Sm|Eu|Gd|Tb|Dy|Ho|Er|Tm|Yb|Lu|Hf|Ta|W|Re|Os|Ir|Pt|Au|Hg|Tl|Pb|Bi|Po|At|Rn|Fr|Ra|Ac|Th|Pa|U|Np|Pu|Am|Cm|Bk|Cf|Es|Fm|Md|No|Lr)>?(?=\\s)"
+        },
+        {
+          "name": "storage.type.orbital.orca",
+          "match": "(?<=\\s)(\\d+)?(?:s {4}|px {3}|py {3}|pz {3}|dz2 {2}|dx2y2|dxy {2}|dxz {2}|dyz {2}|f0 {3}|f\\+1 {2}|f-1 {2}|f\\+2 {2}|f-2 {2}|f\\+3 {2}|f-3 {2})(?=\\s)"
+        }
+      ]
+    },
+    "unit": {
+      "patterns": [
+        {
+          "name": "storage.type.unit.orca",
+          "match": "(?<=\\s|\\()((days|min|hours|sec|MB|%|eV|cm-1|Eh|Eh\\/bohr|bohr|minutes|seconds|msec|au|nm|cgs|electrons)(?=\\s|\\)))"
+        }
+      ]
+    },
+    "boolean": {
+      "patterns": [
+        {
+          "name": "constant.language.boolean.true.orca",
+          "match": "\\b(true|yes|YES|on|ON)\\b"
+        },
+        {
+          "name": "constant.language.boolean.false.orca",
+          "match": "\\b(false|no|NO|off|OFF)\\b"
+        }
+      ]
+    },
+    "status": {
+      "patterns": [
+        {
+          "name": "keyword.control.orca",
+          "match": "\\b(done|NOT USED|NOT available|AVAILABLE|ok|auto|TOTAL)\\b"
+        }
+      ]
+    },
+    "symbol": {
+      "patterns": [
+        {
+          "name": "storage.type.arrow.orca",
+          "match": "\\-+>|\\=+>"
+        }
+      ]
+    },
+    "setting": {
+      "patterns": [
+        {
+          "name": "entity.name.section.orca",
+          "match": "^\\s*[A-Z][A-Z -/():]+$"
+        }
+      ]
+    },
+    "parameter": {
+      "patterns": [
+        {
+          "name": "variable.language.orca",
+          "match": "^.*?(?=\\.\\.\\.)"
+        },
+        {
+          "name": "variable.parameter.orca",
+          "match": "^(?!.*#).*?(?=\\:)"
+        },
+        {
+          "name": "variable.other.constant.orca",
+          "match": "^.*?(?=\\=)"
+        }
+      ]
+    },
+    "keyword": {
+      "patterns": [
+        {
+          "name": "keyword.other.orca",
+          "match": "\\b(?i)(NewGTO|AddGTO|NewECP|NewAuxJGTO|AddAuxJGTO|NewAuxCGTO|AddAuxCGTO|NewAuxJKGTO|AddAuxJKGTO|NewCABSGTO|AddCABSGTO)\\b"
+        },
+        {
+          "name": "keyword.control.orca",
+          "match": "\\b(?i)(HF|DFT|FOD|UHF|RKS|UKS|RHF|ROKS|ROHF)\\b"
+        },
+        {
+          "name": "support.function.orca",
+          "match": "\\b(?i)(SP|ENERGY|(GDIIS-)?(Z|C)?OPT|ENGRAD|NUMGRAD|(NUM)?FREQ|MD|CIM)\\b"
+        },
+        {
+          "name": "keyword.control.orca",
+          "match": "\\b(?i)(No?)UseSym\\b"
+        },
+        {
+          "name": "keyword.control.orca",
+          "match": "\\b(?i)(((D)?LPNO|SC|RI|FIC)-)?(OO-|SCS-)?(RI-)?MP2(-F12)?(-RI)?\\b"
+        },
+        {
+          "name": "keyword.control.orca",
+          "match": "\\b(?i)((D)?LPNO-)?(Q)?C(C|I)SD(\\(T\\))?(-F12)?\\b"
+        },
+        {
+          "name": "keyword.control.orca",
+          "match": "\\b(?i)(((D)?LPNO|SC|RI|FIC)-)?NEVPT2(-F12)?\\b"
+        },
+        {
+          "name": "keyword.control.orca",
+          "match": "\\b(?i)(MRCI|MRA(CPF|QCC|DCI\\d))\\b"
+        },
+        {
+          "name": "keyword.control.orca",
+          "match": "\\b(?i)(NO)?FROZENCORE\\b"
+        },
+        {
+          "name": "keyword.control.orca",
+          "match": "\\b(?i)(ZINDO|NDDO|MNDO)\\/(S|1|2)|AM1|PM3\\b"
+        },
+        {
+          "name": "keyword.control.orca",
+          "match": "\\b(?i)(NO|SPLIT)?RI(-JK|JCOSX|-J|JK|JONX)?(-XC)?\\b"
+        },
+        {
+          "match": "\\b(?i)(NOITER|CONV|(SEMI)?DIRECT|MOREAD|PATOM|PMODEL|HUECKEL|HCORE|(NO)?AUTOSTART)\\b",
+          "name": "emphasis.orca"
+        },
+        {
+          "name": "support.class.orca",
+          "match": "\\b(?i)(No)?Decontract(Aux)?\\b"
+        },
+        {
+          "name": "keyword.control.orca",
+          "match": "\\b(?i)(ZORA(\\/RI)?|DKH(2)?)\\b"
+        },
+        {
+          "name": "support.class.orca",
+          "match": "\\b(?i)(NO?)(FINAL)?GRID(X?)(\\d)?\\b"
+        },
+        {
+          "name": "support.function.orca",
+          "match": "\\b(?i)((VERY)?(TIGHT|EXTREME|STRONG|SLOPPY|LOOSE|NORMAL)SCF)\\b"
+        },
+        {
+          "name": "support.function.orca",
+          "match": "\\b(?i)(TIGHT|LOOSE|NORMAL)OPT\\b"
+        },
+        {
+          "name": "support.function.orca",
+          "match": "\\b(?i)(NO|K)?DIIS\\b"
+        },
+        {
+          "name": "support.function.orca",
+          "match": "\\b(?i)(NRSCF|AHSCF|NONRSCF|SOSCF|NOSOSCF|DAMP|NODAMP|LSHIFT|NOLSHIFT)\\b"
+        },
+        {
+          "name": "support.function.orca",
+          "match": "\\b(?i)(Easy|Normal|(Very)?Slow)Conv\\b"
+        },
+        {
+          "name": "support.class.orca",
+          "match": "\\b(?i)(XYZ|PDB)File\\b"
+        },
+        {
+          "name": "support.function.orca",
+          "match": "\\b(?i)(NO)?SMEAR\\b"
+        },
+        {
+          "name": "support.function.orca",
+          "match": "\\b(?i)(ANGS|BOHRS)\\b"
+        },
+        {
+          "name": "support.function.orca",
+          "match": "\\b(?i)(NO)?(KEEP|READ|CHEAP)?(DENS|INTS)\\b"
+        },
+        {
+          "name": "support.function.orca",
+          "match": "\\b(?i)(NORMAL|MINI|SMALL|LARGE|NO)PRINT(MOS|BASIS|GAP)?\\b"
+        },
+        {
+          "name": "support.function.orca",
+          "match": "\\b(?i)(CPCM|UNO|AIM)"
+        },
+        {
+          "name": "support.class.orca",
+          "match": "\\b(?i)((ALL|REDUCE|NOREDUCE)?POP|(NO)?MULLIKEN|(NO)?LOEWDIN|(NO)?MAYER|NPA|NBO|NONPA|NONBO)\\b"
+        }
+      ]
+    },
+    "method": {
+      "patterns": [
+        {
+          "name": "support.function.orca",
+          "match": "\\b(?i)(scf|casscf|cipsi|cis|cim|coords|cpcm|eprnmr|freq|geom|loc|md|mdci|method|mp2|mrci|mrcc|numgrad|nbo|output|pal|paras|rel|plots|rocis|rr|vpt2|basis|maxcore|moinp|ice|tddft|mcrpa|irc|sym)\\b"
+        }
+      ]
+    },
+    "functioanl": {
+      "patterns": [
+        {
+          "name": "support.class.orca",
+          "match": "\\b(?i)(HFS|LDA|LSD|VWN|VWN5|VWN3|PWLDA|BP(86)?|BLYP|OLYP|GLYP|XLYP|PW91|mPWPW|mPWlYP|RSCAN|rSCAN|r2SCAN(-3c)?|PBE(-QIDH)?|RPBE|REVPBE|PW86PBE|RPW86PBE|PWP|B1LYP|(CAM-)?B3LYP(/G)?|O3LYP|X3LYP|B1P|B3P|B3PW|PW1PW|mPW1PW|mPW1LYP|PBE0(-DH)?|REVPBE0|REVPBE38|PW6B95|BHANDHLYP|TPSS|TPSSh|TPSS0|REVTPSS|revTPSS|M06|M06L|M062X|SCANfunc|B97M(-V|-D3BJ|-D4)|wB97(X?)(-D3|-D4|-V|-D3BJ|-2)?|wB97M(-D4|-V|-D3BJ)|B97(-D|-D3|-3c)?|LC-BLYP|LC-PBE|B2PLYP|B2PLYP-D3|mPW2PLYP|B2GP-PLYP|B2K-PLYP|B2T-PLYP|PWPB95|DSD-BLYP|DSD-PBEP86|DSD-PBEB95|wB2PLYP|wB2GP-PLYP|RSX-QIDH|RSX-0DH|wB88PP86|wPBEPP86|(SCS|SOS)-B2PLYP21|SCS-PBE-QIDH|SOS-PBE-QIDH|SCS-B2GP-PLYP21|SOS-B2GP-PLYP21|(SCS|SOS)-wB2PLYP|SCS-wB2GP-PLYP|SOS-wB2GP-PLYP|SCS-RSX-QIDH|SOS-RSX-QIDH|SCS-wB88PP86|SOS-wB88PP86|SCS-wPBEPP86|SOS-wPBEPP86|HF-3c|PBEh-3c)\\b"
+        }
+      ]
+    },
+    "basis-set": {
+      "patterns": [
+        {
+          "name": "support.constant.orca",
+          "match": "\\b(?i)(MINI|MINIX|MINIS|MIDI|STO-3G|3-21G(SP)?|4-22GSP|SV|TZV|m?(6-31|6-311)(\\+|\\+\\+)?G|(SARC(2?)-|ma-)?(old-)?(ZORA-|DKH-|x2c-)?(def2-)?m?(SV|TZV|QZV)(P|\\(P\\))P?D?(all)?(-2c)?(-s)?(/J|/JK|/C)?|(aug-|maug-|jul-|jun-|may-|apr-)?cc-p(C|wC)?V(DZ|TZ|QZ|5Z|6Z)(-PP|-DK|-DK3)?(-F12)?(-MP2Fit|-OptRI|-CABS)?(/JK|/C)?|dhf-(SV|TZV|QZV)(P|\\(P\\))P?(-2c)?|old-SV|old-TZV|Partridge-(1|2|3|4)|D95p?|LANL(08|2DZ|2TZ)|(EPR|IGLO)-II(I?)|UGBS|CP|Wachters\\+f|(aug-|saug-)?ANO-pV(D|T|Q|5|6)Z|ANO-RCC-(DZP|TZP|QZP|Full)|(aug-)?pc(J|seg|Sseg)?-(0|1|2|3|4)|W1-(mtsmall|DZ|TZ|QZ|Opt)|Sapporo-(DKH3-)?(D|T|Q)ZP-2012)\\b"
+        },
+        {
+          "name": "support.constant.orca",
+          "match": "\\b(?i)(def2/(J|JK|JKsmall)|(SARC|x2c)/J|SARC2-DKH-QZV/JK|AutoAux|AuxJ|AuxJK|AuxC)\\b"
+        }
+      ]
+    }
   }
-  
+}
