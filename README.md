@@ -41,9 +41,9 @@ N/A
 
 Settings of this extension can be changed in the settings of VS Code (click on the gear icon in the bottom left corner of the VS Code window or press `Ctrl+,` on Windows or `Cmd+,` on Mac). The configuration options are listed under `Extensions` -> `ORCA_TOC`, or could be accessed by searching `ORCA_TOC` in the search bar of the settings window.
 
-The current version (0.4.3) enables changing the default status of the toggleable TOC view. The default collapsed status of the TOC view can be changed in the settings of the extension. The default value is `true`, which means that the TOC view is collapsed by default. The TOC view can be expanded by clicking the toggle arrow next to each parent entry.
+The current version (0.4.4) enables changing the default status of the toggleable TOC view. The default collapsed status of the TOC view can be changed in the settings of the extension. The default value is `true`, which means that the TOC view is collapsed by default. The TOC view can be expanded by clicking the toggle arrow next to each parent entry.
 
-The current version (0.4.3) enables changing the highlight symbols for the TOC entries. The default highlight symbol is 'circle-large-filled'.
+The current version (0.4.4) enables changing the highlight symbols for the TOC entries. The default highlight symbol is 'circle-large-filled'.
 For a list of available highlight symbols, please see [here](https://code.visualstudio.com/api/references/icons-in-labels#icon-listing).
 
 ![Settings Example](images/settings_example.png)
@@ -56,6 +56,22 @@ For a list of available highlight symbols, please see [here](https://code.visual
 
 - :warning: For large ORCA output files, The current solution is using the `FileSystemProvider` API to read the contents of the ORCA output file directly from the file system. This will allow the extension to parse ORCA output files that are larger than 50MB.  please use the command `orca_toc: Show ORCA Outline External` from the command palette and load the large ORCA output file manually from your file system. The loaded ORCA output file will be displayed in a new tab in the editor of the current VS Code window, with a :lock: symbol at the end of the file name. This is because the file is read-only and cannot be modified. The TOC view will be automatically populated with the contents of this ORCA output file.
 
+- **Syntax highlighting on very large files** (Large File Optimizations):
+  VS Code may reduce features on large files to protect performance. Common effects include disabled tokenization/highlighting and sluggish navigation. If your ORCA output is very big (e.g., >20 MB or >300k lines), this optimization can kick in even though the language is detected correctly. You can try to relax the optimization by adding the following to your user `settings.json`:
+  ```json
+  "editor.largeFileOptimizations": false
+  ```
+  **Important performance note:** Disabling Large File Optimizations can significantly increase CPU and memory usage and may make the editor sluggish or unresponsive for huge files. We recommend using the command `orca_toc: Show ORCA Outline External` for very large outputs as the safer default.
+  **Heads‑up:** On very large files, **syntax highlighting may only work if Large File Optimizations are disabled**.
+
+<!-- - **External Reader behavior updates (0.4.4):**
+  - The External Reader (`orca_toc: Show ORCA Outline External`) now displays file content **verbatim** (no line stripping), with only line endings normalized.
+  - Clicking entries in **ORCA FILE OUTLINE** navigates within the same read‑only tab (no duplicate plain `file:` tab).
+  - The large‑file warning now triggers **only** for regular `file:` tabs; it won’t appear for `orca:` documents. Language mode is explicitly set to `orcaOut` for reliable highlighting when feasible. -->
+
+- **What counts as a “large” file in VS Code?**
+  VS Code begins applying large-file heuristics around **20 MB** or **~300,000 lines**. Some features may be hard-disabled around **50 MB**. These thresholds are editor-internal safeguards and can change between versions.
+
 - :construction: A known issue is that clicking the heading titles in the `ORCA FILE OUTLINE` view for large ORCA output files will not navigate to the corresponding line in the opened tab. Instead a new tab with the same name file name will pop up, showing identical contents and TOC view at the respective line. This bug will be fixed in a future release.
 
 - :warning: **(Not Recommended!)** Another solution for large ORCA output files is by patching the `workbench.desktop.main.js` file to increase the limit. The default value of `_MODEL_SYNC_LIMIT` is `50 * 1024 * 1024`, which is 50MB. You could change it to a value that is larger than the size of your ORCA output file. This will cause VS Code to display a warining message that the installation is corrupted. Please use this solution at your own risk.
@@ -65,6 +81,14 @@ For a list of available highlight symbols, please see [here](https://code.visual
 ## Release Notes
 
 For detailed release notes, please see [CHANGELOG.md](CHANGELOG.md).
+
+### 0.4.4
+
+- Added expanded guidance on Large File Optimizations.
+<!-- - Content for large files is shown verbatim (only line endings normalized) in the external reader. -->
+<!-- - Fixed the bug while duplicate tabs appeared while clicking entry in the TOC for large files opened externally. -->
+<!-- - Added warnings and instructions for loading large files. -->
+- Dependency updates and general housekeeping.
 
 ### 0.4.3
 

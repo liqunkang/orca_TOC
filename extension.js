@@ -189,7 +189,7 @@ class OrcaFileSystemProvider {
             for await (const chunk of fileStream) {
                 buffer += chunk; // Append the chunk to the buffer
                 // Skip lines as per your requirement
-                buffer = buffer.replace(/^(\ {0,3}\d+.*\n)/gm, '\n'); // Remove line numbers
+                buffer = buffer.replace(/^(\ {0,30}-?\d+.*\n)/gm, '\n'); // Remove line numbers
                 // Process buffer with regex here...
             }
             return Buffer.from(buffer);
