@@ -2,9 +2,9 @@
   "name": "orcatoc",
   "displayName": "orca_toc",
   "description": "Provides an outline for ORCA files in the VS Code sidebar.",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "engines": {
-    "vscode": "^1.82.0"
+    "vscode": "^1.102.0"
   },
   "categories": [
     "Other"
@@ -95,6 +95,12 @@
           ],
           "description": "Symbol used for highlighting TOC entries."
         }
+        ,
+        "orcatoc.largeFileWarnMB": {
+          "type": "number",
+          "default": 20,
+          "description": "Show a warning when opening a .out file larger than this many megabytes. VS Code may apply large-file optimizations (reduced features) for files over ~20MB or ~300k lines."
+        }
       }
     },
     "grammars": [
@@ -111,14 +117,15 @@
     "test": "node ./test/runTest.js"
   },
   "devDependencies": {
-    "@types/vscode": "^1.82.0",
-    "@types/mocha": "^10.0.2",
-    "@types/node": "18.x",
-    "eslint": "^8.50.0",
-    "glob": "^10.3.3",
-    "mocha": "^10.2.0",
-    "typescript": "^5.2.2",
-    "@vscode/test-electron": "^2.3.4"
+    "@types/mocha": "^10.0.10",
+    "@types/node": "24.x",
+    "@types/vscode": "^1.102.0",
+    "@vscode/test-electron": "^2.5.2",
+    "eslint": "^9.33.0",
+    "glob": "^11.0.3",
+    "mocha": "^11.7.1",
+    "npm-check-updates": "^18.0.2",
+    "typescript": "^5.9.2"
   },
   "repository": {
     "type": "git",

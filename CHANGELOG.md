@@ -77,3 +77,11 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [0.4.3] - 2024-01-25
 
 - update of `orca.tmLanguage.json` file for better syntax highlighting of the ORCA output file.
+
+## [0.4.4] - 2025-08-13
+
+- Added instruction for expanded Large File Optimizations guidance; emphasized that highlighting on huge files may only work with optimizations disabled.
+<!-- - External Reader now displays content verbatim (no line stripping), with normalized line endings. -->
+<!-- - Navigation from the outline stays in the same read‑only tab instead of spawning a duplicate tab for large files opened externally. -->
+<!-- - Fixes for edge cases that caused some lines to appear blank in the read‑only tab. -->
+- Dependency and lockfile updates.
