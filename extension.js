@@ -25,6 +25,7 @@ class OrcaOutlineProvider {
         this._onDidChangeTreeData = new vscode.EventEmitter(); // Create an event emitter
         this._filePath = ""; // Initialize the file path
         this._expandedState = {}; // Initialize the expanded state
+        this._uri = null; // Track the current document URI (file: or orca:)
     }
 
     // Method to generate the tree item for a given element
@@ -103,7 +104,7 @@ class OrcaOutlineProvider {
                     children: child.children,  // This will hold any further nested children
                     command: {
                         command: 'vscode.open',
-                        arguments: [vscode.Uri.file(this._filePath), {
+                        arguments: [this._uri ? this._uri : vscode.Uri.file(this._filePath), {
                             selection: new vscode.Range(child.line, 0, child.line, 0)
                         }],
                         title: 'Open File'
@@ -123,7 +124,7 @@ class OrcaOutlineProvider {
                     children: match.children,  // This will hold the first level of children
                     command: {
                         command: 'vscode.open',
-                        arguments: [vscode.Uri.file(this._filePath), {
+                        arguments: [this._uri ? this._uri : vscode.Uri.file(this._filePath), {
                             selection: new vscode.Range(match.line, 0, match.line, 0)
                         }],
                         title: 'Open File'
@@ -135,7 +136,6 @@ class OrcaOutlineProvider {
                 };
             });
         }
-
     }
 
     // Method to set the expanded state for a given element
@@ -151,7 +151,11 @@ class OrcaOutlineProvider {
     update(matches, filePath) {
         this._matches = matches;
         this._filePath = filePath; // Store the file path here
-        // this._onDidChangeTreeData.fire(); // Trigger the event emitter
+        // If the active editor corresponds to this file, capture its exact URI (file: or orca:)
+        const ae = vscode.window.activeTextEditor;
+        if (ae && ae.document && ae.document.uri && ae.document.uri.fsPath === filePath) {
+            this._uri = ae.document.uri;
+        }
         this.refresh(); // Refresh the tree view
     }
 
@@ -188,10 +192,9 @@ class OrcaFileSystemProvider {
             let buffer = ''; // Initialize the buffer
             for await (const chunk of fileStream) {
                 buffer += chunk; // Append the chunk to the buffer
-                // Skip lines as per your requirement
-                buffer = buffer.replace(/^(\ {0,30}-?\d+.*\n)/gm, '\n'); // Remove line numbers
-                // Process buffer with regex here...
             }
+            // buffer = buffer.replace(/^(\ {0,30}-?\d+.*\n)/gm, '\n'); // Remove line numbers
+            buffer = buffer.replace(/\r\n?|\u2028|\u2029/g, '\n');
             return Buffer.from(buffer);
         } catch (error) {
             console.error(`Failed to read file: ${error.message}`);
