@@ -2,7 +2,7 @@
   "name": "orcatoc",
   "displayName": "orca_toc",
   "description": "Provides an outline for ORCA files in the VS Code sidebar.",
-  "version": "0.0.2",
+  "version": "0.4.3",
   "engines": {
     "vscode": "^1.82.0"
   },
@@ -10,34 +10,101 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:extension.showOrcaOutline",
     "onLanguage:orcaOut"
   ],
   "main": "./extension.js",
   "contributes": {
     "commands": [
       {
-          "command": "extension.showOrcaOutline",
-          "title": "Show Orca Outline"
+        "command": "extension.showOrcaOutline",
+        "title": "orca_toc: Show ORCA Outline"
+      },
+      {
+        "command": "extension.showOrcaOutlineExternal",
+        "title": "orca_toc: Show ORCA Outline External"
+      },
+      {
+        "command": "extension.toggleCollapseExpandAll",
+        "title": "orca_toc: Toggle Collapse/Expand All TOC Entries"
       }
     ],
     "views": {
-        "explorer": [
-            {
-                "id": "orcaFileOutline",
-                "name": "ORCA File Outline",
-                "when": "resourceExtname == .out"
-            }
-        ]
+      "explorer": [
+        {
+          "id": "orcaFileOutline",
+          "name": "ORCA FILE OUTLINE",
+          "when": "resourceExtname =~ /.out$/"
+        }
+      ]
     },
-    "languages": [{
-      "id": "orcaOut",
-      "extensions": [".out"],
-      "aliases": ["ORCA-output", "orca-output"],
-      "configuration": "./language-configuration.json"
-  }]
+    "languages": [
+      {
+        "id": "orcaOut",
+        "extensions": [
+          ".out"
+        ],
+        "aliases": [
+          "ORCA-output",
+          "orca-output"
+        ]
+      }
+    ],
+    "configuration": {
+      "title": "ORCA_TOC",
+      "properties": {
+        "orcatoc.defaultCollapsed": {
+          "type": "boolean",
+          "default": true,
+          "description": "Control whether the ORCA outline is collapsed by default."
+        },
+        "orcatoc.highlightSymbol": {
+          "type": "string",
+          "default": "circle-large-filled",
+          "enum": [
+            "activate-breakpoints",
+            "arrow-right",
+            "bookmark",
+            "check",
+            "circle-filled",
+            "circle-large-filled",
+            "circle-outline",
+            "circle-large-outline",
+            "ellipsis",
+            "eye",
+            "heart",
+            "lightbulb",
+            "link",
+            "more",
+            "pass",
+            "pass-filled",
+            "play",
+            "primitive-dot",
+            "primitive-square",
+            "search",
+            "smiley",
+            "sparkle",
+            "squirrel",
+            "star",
+            "star-empty",
+            "star-full",
+            "star-half",
+            "snake",
+            "tag",
+            "target",
+            "zap"
+          ],
+          "description": "Symbol used for highlighting TOC entries."
+        }
+      }
+    },
+    "grammars": [
+      {
+        "language": "orcaOut",
+        "scopeName": "source.orcaOut",
+        "path": "./syntaxes/orca.tmLanguage.json"
+      }
+    ]
   },
-
   "scripts": {
     "lint": "eslint .",
     "pretest": "npm run lint",
@@ -54,9 +121,10 @@
     "@vscode/test-electron": "^2.3.4"
   },
   "repository": {
-   "type": "git",
-    "url": "https://github.com/liqunkang/orca_TOC.git" 
+    "type": "git",
+    "url": "https://github.com/liqunkang/orca_TOC.git"
   },
   "license": "GPL-3.0",
-  "publisher": "liqunKang"
+  "publisher": "liqunKang",
+  "icon": "images/orca_TOC_new.png"
 }
