@@ -41,9 +41,9 @@ N/A
 
 Settings of this extension can be changed in the settings of VS Code (click on the gear icon in the bottom left corner of the VS Code window or press `Ctrl+,` on Windows or `Cmd+,` on Mac). The configuration options are listed under `Extensions` -> `ORCA_TOC`, or could be accessed by searching `ORCA_TOC` in the search bar of the settings window.
 
-The current version (0.4.4) enables changing the default status of the toggleable TOC view. The default collapsed status of the TOC view can be changed in the settings of the extension. The default value is `true`, which means that the TOC view is collapsed by default. The TOC view can be expanded by clicking the toggle arrow next to each parent entry.
+The current version (0.4.5) enables changing the default status of the toggleable TOC view. The default collapsed status of the TOC view can be changed in the settings of the extension. The default value is `true`, which means that the TOC view is collapsed by default. The TOC view can be expanded by clicking the toggle arrow next to each parent entry.
 
-The current version (0.4.4) enables changing the highlight symbols for the TOC entries. The default highlight symbol is 'circle-large-filled'.
+The current version (0.4.5) enables changing the highlight symbols for the TOC entries. The default highlight symbol is 'circle-large-filled'.
 For a list of available highlight symbols, please see [here](https://code.visualstudio.com/api/references/icons-in-labels#icon-listing).
 
 ![Settings Example](images/settings_example.png)
