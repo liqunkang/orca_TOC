@@ -127,6 +127,9 @@
     "npm-check-updates": "^18.0.2",
     "typescript": "^5.9.2"
   },
+  "overrides": {
+    "flatted": "^3.4.2"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/liqunkang/orca_TOC.git"
