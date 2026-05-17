@@ -1,11 +1,8 @@
 # orcatoc
-
-![Visual Studio Marketplace Version (including pre-releases)](https://img.shields.io/visual-studio-marketplace/v/LiqunKang.orcatoc)
-![Visual Studio Marketplace Release Date](https://img.shields.io/visual-studio-marketplace/release-date/LiqunKang.orcatoc)
-![Visual Studio Marketplace Last Updated](https://img.shields.io/visual-studio-marketplace/last-updated/LiqunKang.orcatoc)
-![Visual Studio Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/LiqunKang.orcatoc)
-![Visual Studio Marketplace Downloads](https://img.shields.io/visual-studio-marketplace/d/LiqunKang.orcatoc)
-![Visual Studio Marketplace Rating](https://img.shields.io/visual-studio-marketplace/r/LiqunKang.orcatoc)
+[![Version](https://vsmarketplacebadges.dev/version-short/LiqunKang.orcatoc.svg)](https://marketplace.visualstudio.com/items?itemName=LiqunKang.orcatoc)
+[![Installs](https://vsmarketplacebadges.dev/installs-short/LiqunKang.orcatoc.svg)](https://marketplace.visualstudio.com/items?itemName=LiqunKang.orcatoc)
+[![Downloads](https://vsmarketplacebadges.dev/downloads-short/LiqunKang.orcatoc.svg)](https://marketplace.visualstudio.com/items?itemName=LiqunKang.orcatoc)
+[![Rating](https://vsmarketplacebadges.dev/rating-star/LiqunKang.orcatoc.svg)](https://marketplace.visualstudio.com/items?itemName=LiqunKang.orcatoc)
 
 This an extension for Visual Studio Code that provides a separate toggleable TOC view in the sidebar.
 
