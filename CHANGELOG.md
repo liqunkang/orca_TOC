@@ -4,6 +4,12 @@ All notable changes to the "orcatoc" extension will be documented in this file.
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+# Change Log
+
+All notable changes to the "orcatoc" extension will be documented in this file.
+
+Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+
 ## [0.0.1] - 2023-10-09
 
 - Initial release of orcatoc. This is a very early release and is still under development.
@@ -85,3 +91,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 <!-- - Navigation from the outline stays in the same read‑only tab instead of spawning a duplicate tab for large files opened externally. -->
 <!-- - Fixes for edge cases that caused some lines to appear blank in the read‑only tab. -->
 - Dependency and lockfile updates.
+
+## [0.4.5] - 2025-12-26
+
+- Dependency and lockfile updates to address npm audit / GitHub security advisories.
